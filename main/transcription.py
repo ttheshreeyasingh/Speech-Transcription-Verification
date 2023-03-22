@@ -1,0 +1,2 @@
+import os
+os.system("curl -k -X 'POST'   'https://asr.iiit.ac.in/ssmtapi//'    -H 'accept: application/json'    -H 'Content-Type: multipart/form-data'    -F 'uploaded_file=@mod_1.wav;type=audio/x-wav'    -F 'lang=eng'")
