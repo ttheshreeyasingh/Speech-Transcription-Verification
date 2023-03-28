@@ -1,65 +1,72 @@
-import React, {useState} from 'react'
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function TextForm(props) {
-    const handleMarkForReview = ()=>{
+    const [text, setText] = useState('Loading...');
+
+    useEffect(() => {
+        const fetchText = async () => {
+            try {
+                const response = await axios.get('blah.txt');
+                setText(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchText();
+    }, []);
+
+    console.log(text);
+
+    const handleMarkForReview = () => {
         let newText = text.toUpperCase();
         setText(newText)
         props.showAlert("Converted to uppercase!", "success");
     }
 
-    const handleEdit = ()=>{ 
-        let newText = text.toLowerCase();
-        setText(newText)
-        props.showAlert("Converted to lowercase!", "success");
-    }
-
-    const handleSave = ()=>{ 
+    const handleSave = () => {
         let newText = '';
         setText(newText);
         props.showAlert("Text Cleared!", "success");
     }
 
-    const handleOnChange = (event)=>{
-        setText(event.target.value) 
+    const handleOnChange = (event) => {
+        setText(event.target.value)
     }
 
-    // Credits: A
     const handleDiscard = () => {
-        navigator.clipboard.writeText(text); 
+        navigator.clipboard.writeText(text);
         props.showAlert("Copied to Clipboard!", "success");
     }
 
-    // Credits: Coding Wala
     const handleNext = () => {
         let newText = text.split(/[ ]+/);
         setText(newText.join(" "));
         props.showAlert("Extra spaces removed!", "success");
     }
 
-    const [text, setText] = useState(''); 
-    // text = "new text"; // Wrong way to change the state
-    // setText("new text"); // Correct way to change the state
     return (
         <>
-        <div className="container" style={{color: props.mode==='dark'?'white':'#042743'}}> 
-            <h3 className='mb-4'>{props.heading}</h3>
-            <div className="mb-3"> 
-            <textarea className="form-control" value={text} onChange={handleOnChange} style={{backgroundColor: props.mode==='dark'?'#13466e':'white', color: props.mode==='dark'?'white':'#042743'}} id="myBox" rows="8"></textarea>
+            <div className="container" style={{ color: props.mode === 'dark' ? 'white' : '#042743' }}>
+                <h3 className='mb-4'>{props.heading}</h3>
+                <div className="mb-3">
+                    <textarea
+                        className="form-control"
+                        style={{ backgroundColor: props.mode === 'dark' ? '#13466e' : 'white', color: props.mode === 'dark' ? 'white' : '#042743' }}
+                        id="myBox"
+                        rows="8"
+                        onChange={handleOnChange}
+                        value={text}
+                    ></textarea>
+                </div>
+                <button disabled={text.length === 0} className="btn btn-primary mx-1 my-1" onClick={handleMarkForReview}>Mark for Review</button>
+                <button disabled={text.length === 0} className="btn btn-primary mx-1 my-1" onClick={handleSave}>Save</button>
+                <button disabled={text.length === 0} className="btn btn-primary mx-1 my-1" onClick={handleDiscard}>Discard</button>
+                <button disabled={text.length === 0} className="btn btn-primary mx-1 my-1" onClick={handleNext}>Next</button>
             </div>
-            <button disabled={text.length===0} className="btn btn-primary mx-1 my-1" onClick={handleMarkForReview}>Mark for Review</button>
-            <button disabled={text.length===0} className="btn btn-primary mx-1 my-1" onClick={handleEdit}>Edit</button>
-            <button disabled={text.length===0} className="btn btn-primary mx-1 my-1" onClick={handleSave}>Save</button>
-            <button disabled={text.length===0} className="btn btn-primary mx-1 my-1" onClick={handleDiscard}>Discard</button>
-            <button disabled={text.length===0} className="btn btn-primary mx-1 my-1" onClick={handleNext}>Next</button>
-        </div>
-        {/* <div className="container my-3" style={{color: props.mode==='dark'?'white':'#042743'}}>
-            <h2>Your text summary</h2>
-            <p>{text.split(/\s+/).filter((element)=>{return element.length!==0}).length} words and {text.length} characters</p>
-            <p>{0.008 *  text.split(/\s+/).filter((element)=>{return element.length!==0}).length} Minutes read</p>
-            <h2>Preview</h2>
-            <p>{text.length>0?text:"Nothing to preview!"}</p>
-        </div> */}
         </>
-    )
+    );
 }
+
+
