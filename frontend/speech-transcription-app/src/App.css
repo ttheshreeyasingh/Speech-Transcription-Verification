@@ -40,3 +40,16 @@
   .blank{
     color: rgb(32, 8, 246);
   }
+
+  .progress-bar {
+    height: 40px;
+    border-radius: 20px;
+    background-color: #007bff;
+  }
+
+  .progress {
+    height: 40px;
+    margin-top: 20px;
+    background-color: #f5f5f5;
+    border-radius: 20px;
+  }
