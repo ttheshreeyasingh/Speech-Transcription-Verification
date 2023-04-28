@@ -53,16 +53,16 @@ export default function TextForm(props) {
         // Create a new Blob object with the text content
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         // Use the saveAs() function from FileSaver.js to save the file
-        const filePath = 'transcripts' + transcriptNumber.toString().padStart(4, '0') + '.txt';
+        const filePath = `transcript${transcriptNumber.toString().padStart(4, '0')}.txt`;
         FileSaver.saveAs(blob, filePath);
     };
 
-    // Discard button
-    const handleDiscard = () => {
+       // Discard button
+       const handleDiscard = () => {
         // Create a new Blob object with the text content
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         // Use the saveAs() function from FileSaver.js to save the file
-        const filePath = 'transcripts' + transcriptNumber.toString().padStart(4, '0') + '.txt';
+        const filePath = `transcript${transcriptNumber.toString().padStart(4, '0')}.txt`;
         FileSaver.saveAs(blob, filePath);
     };
 
