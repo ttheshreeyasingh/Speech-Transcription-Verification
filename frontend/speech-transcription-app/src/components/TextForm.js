@@ -3,6 +3,9 @@
 // Works for any number of transcripts and audio files. 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { saveAs } from 'file-saver';
+import * as FileSaver from 'file-saver';
+
 
 export default function TextForm(props) {
     const [text, setText] = useState('Loading...');
@@ -43,26 +46,26 @@ export default function TextForm(props) {
         }
     }, [transcriptNumber, props.isAudio]);
 
+    const fs = require('fs');
+
     // Save button
     const handleSave = () => {
-        let newText = '';
-        setText(newText);
-        props.showAlert('Text Cleared!', 'success');
-    };
-
-    const handleOnChange = (event) => {
-        setText(event.target.value);
+        // Create a new Blob object with the text content
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        // Use the saveAs() function from FileSaver.js to save the file
+        const filePath = '/home/shreeya/Speech-Transcription-App/save/transcripts' + transcriptNumber.toString().padStart(4, '0') + '.txt';
+        FileSaver.saveAs(blob, filePath);
     };
 
     // Discard button
     const handleDiscard = () => {
-        if (isAudio) {
-            navigator.clipboard.writeText('');
-        } else {
-            navigator.clipboard.writeText(text);
-        }
-        props.showAlert('Copied to Clipboard!', 'success');
+        // Create a new Blob object with the text content
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        // Use the saveAs() function from FileSaver.js to save the file
+        const filePath = '/home/shreeya/Speech-Transcription-App/discard/transcripts' + transcriptNumber.toString().padStart(4, '0') + '.txt';
+        FileSaver.saveAs(blob, filePath);
     };
+
 
     // Next button
     const handleNext = () => {
@@ -97,7 +100,7 @@ export default function TextForm(props) {
                         }}
                         id='myBox'
                         rows='8'
-                        onChange={handleOnChange}
+                        // onChange={handleOnChange}
                         value={text}
                     />
                     {isAudio && (
@@ -107,8 +110,8 @@ export default function TextForm(props) {
                     )}
                 </div>
                 <div className="d-flex justify-content-center">
-                    <button disabled={text === 'Loading...' || text.length === 0} className='btn btn-primary mx-1 my-1' onClick={handleSave}style={{ backgroundColor:"limegreen" }}>Save</button>
-                    <button disabled={text === 'Loading...' || text.length === 0} className='btn btn-primary mx-1 my-1' onClick={handleDiscard}style={{ backgroundColor:"Red" }}>Discard</button>
+                    <button disabled={text === 'Loading...'} className='btn btn-primary mx-1 my-1' onClick={handleSave} style={{ backgroundColor: "limegreen" }}>Save</button>
+                    <button disabled={text === 'Loading...'} className='btn btn-primary mx-1 my-1' onClick={handleDiscard} style={{ backgroundColor: "Red" }}>Discard</button>
                     <button className='btn btn-primary mx-1 my-1' onClick={handlePrevious} disabled={text === 'Loading...' || transcriptNumber <= 1}>Previous</button>
                     <button className='btn btn-primary mx-1 my-1' onClick={handleNext} disabled={text === 'Loading...'}>Next</button>
 
