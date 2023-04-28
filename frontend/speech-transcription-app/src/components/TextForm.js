@@ -53,7 +53,7 @@ export default function TextForm(props) {
         // Create a new Blob object with the text content
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         // Use the saveAs() function from FileSaver.js to save the file
-        const filePath = '/home/shreeya/Speech-Transcription-App/save/transcripts' + transcriptNumber.toString().padStart(4, '0') + '.txt';
+        const filePath = 'transcripts' + transcriptNumber.toString().padStart(4, '0') + '.txt';
         FileSaver.saveAs(blob, filePath);
     };
 
@@ -62,7 +62,7 @@ export default function TextForm(props) {
         // Create a new Blob object with the text content
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         // Use the saveAs() function from FileSaver.js to save the file
-        const filePath = '/home/shreeya/Speech-Transcription-App/discard/transcripts' + transcriptNumber.toString().padStart(4, '0') + '.txt';
+        const filePath = 'transcripts' + transcriptNumber.toString().padStart(4, '0') + '.txt';
         FileSaver.saveAs(blob, filePath);
     };
 
@@ -90,8 +90,13 @@ export default function TextForm(props) {
                 className='container'
                 style={{ color: props.mode === 'dark' ? 'white' : '#042743' }}
             >
-                <h3 className='mb-4'>{props.heading}</h3>
                 <div className='mb-3' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    {isAudio && (
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', width: '100%', height: '100%' }}>
+                            <audio controls src={audioSrc} />
+                        </div>
+                    )}
+                    <h3 className='mb-4'>{props.heading}</h3>
                     <textarea
                         className='form-control'
                         style={{
@@ -100,14 +105,9 @@ export default function TextForm(props) {
                         }}
                         id='myBox'
                         rows='8'
-                        // onChange={handleOnChange}
+                        onChange={(event) => setText(event.target.value)}
                         value={text}
                     />
-                    {isAudio && (
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', width: '100%', height: '100%' }}>
-                            <audio controls src={audioSrc} />
-                        </div>
-                    )}
                 </div>
                 <div className="d-flex justify-content-center">
                     <button disabled={text === 'Loading...'} className='btn btn-primary mx-1 my-1' onClick={handleSave} style={{ backgroundColor: "limegreen" }}>Save</button>
@@ -121,3 +121,4 @@ export default function TextForm(props) {
     );
 
 }
+
