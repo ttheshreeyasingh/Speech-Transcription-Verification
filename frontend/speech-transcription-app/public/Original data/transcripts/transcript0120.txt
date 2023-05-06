@@ -1,0 +1,1 @@
+and permutations which algorithm cannot complete in the real time for example something called a travelling salesman problem if you want to find out shortest path 

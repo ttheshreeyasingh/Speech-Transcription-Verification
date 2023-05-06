@@ -1,1 +1,0 @@
-the program can not complete in the salesman lifetime 

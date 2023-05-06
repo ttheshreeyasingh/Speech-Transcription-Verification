@@ -13,12 +13,12 @@ const AudioPlayerWithTextForm = () => {
     };
 
     // Decrements the index on clicking previous button 
-    const handlePrevious = () => {
-        if (transcriptNumber > 1) {
-            setTranscriptNumber((prevNumber) => prevNumber - 1);
-            setIsAudio(false);
-        }
-    };
+    // const handlePrevious = () => {
+    //     if (transcriptNumber > 1) {
+    //         setTranscriptNumber((prevNumber) => prevNumber - 1);
+    //         setIsAudio(false);
+    //     }
+    // };
 
     useEffect(() => {
         setIsAudio(false);
@@ -35,7 +35,7 @@ const AudioPlayerWithTextForm = () => {
                     <TextForm
                         heading={`Transcript ${transcriptNumber}`}
                         handleNext={handleNext}
-                        handlePrevious={handlePrevious}
+                        //handlePrevious={handlePrevious}
                         isAudio={isAudio}
                     />
                 </div>

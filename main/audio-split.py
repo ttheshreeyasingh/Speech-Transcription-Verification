@@ -93,8 +93,18 @@ def vad_collector(sample_rate, frame_duration_ms,
     if voiced_frames:
         yield b''.join([f.bytes for f in voiced_frames])
 
-file_name= "mod_1.wav"
-op_path= "audio_chunks"
+path = "./frontend/speech-transcription-app/public/Original data"
+if not os.path.exists(path):
+    os.makedirs(path)
+    print("Output folder created")
+else:
+    print("Output folder already present")
+
+file_name= "./main/mod_1.wav"
+op_path= "./frontend/speech-transcription-app/public/Original data/audio_chunks"
+
+
+
 def main(file_name,op_path):
 
     if os.path.isdir(op_path):
@@ -114,10 +124,21 @@ def main(file_name,op_path):
         write_wave(path, segment, sample_rate )
 
 
-file_name= "mod_1.wav"
+
 # sys.argv[1]
-op_path= "audio_chunks"
+
 # sys.argv[2]
+file_name= "./main/mod_1.wav"
+op_path= "./frontend/speech-transcription-app/public/Original data/audio_chunks"
 main(file_name,op_path)
+
+print("Audio Splitting Done")
+
+
+
+
+
+
+
 
 

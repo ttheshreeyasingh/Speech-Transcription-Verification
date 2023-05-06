@@ -10,7 +10,9 @@ import * as FileSaver from 'file-saver';
 export default function TextForm(props) {
     const [text, setText] = useState('Loading...');
     const [audioSrc, setAudioSrc] = useState(null);
-    const [transcriptNumber, setTranscriptNumber] = useState(1);
+
+    // Using localStorage API to store the last transcript number and retrieve it when the application starts again
+    const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
     const [isAudio, setIsAudio] = useState(false);
 
     // Fetch the transcriptions and audio files 
@@ -46,7 +48,7 @@ export default function TextForm(props) {
         }
     }, [transcriptNumber, props.isAudio]);
 
-    const fs = require('fs');
+    // const fs = require('fs');
 
     // Save button
     const handleSave = () => {
@@ -57,8 +59,8 @@ export default function TextForm(props) {
         FileSaver.saveAs(blob, filePath);
     };
 
-       // Discard button
-       const handleDiscard = () => {
+    // Discard button
+    const handleDiscard = () => {
         // Create a new Blob object with the text content
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         // Use the saveAs() function from FileSaver.js to save the file
@@ -68,21 +70,18 @@ export default function TextForm(props) {
 
 
     // Next button
-    const handleNext = () => {
-        props.handleNext();
-        setTranscriptNumber(transcriptNumber + 1);
-        setText('Loading...');
-        setAudioSrc(null);
-    };
+    const handleNext = async () => {
+        localStorage.setItem('transcriptNumber', transcriptNumber + 1);
+        setTranscriptNumber((prevState) => prevState + 1);
 
-    // Previous button
-    const handlePrevious = () => {
-        props.handlePrevious();
-        setTranscriptNumber((prevNumber) => prevNumber - 1);
-        setText('Loading...');
-        setAudioSrc(null);
+        // Fetch the new transcript text
+        try {
+            const response = await axios.get(`./Original data/transcripts/transcript${(transcriptNumber + 1).toString().padStart(4, '0')}.txt`);
+            setText(response.data);
+        } catch (error) {
+            console.error(error);
+        }
     };
-
 
     return (
         <>
@@ -96,7 +95,7 @@ export default function TextForm(props) {
                             <audio controls src={audioSrc} />
                         </div>
                     )}
-                    <h3 className='mb-4'>{props.heading}</h3>
+                    <h3>Transcript {transcriptNumber}</h3>
                     <textarea
                         className='form-control'
                         style={{
@@ -112,7 +111,6 @@ export default function TextForm(props) {
                 <div className="d-flex justify-content-center">
                     <button disabled={text === 'Loading...'} className='btn btn-primary mx-1 my-1' onClick={handleSave} style={{ backgroundColor: "limegreen" }}>Save</button>
                     <button disabled={text === 'Loading...'} className='btn btn-primary mx-1 my-1' onClick={handleDiscard} style={{ backgroundColor: "Red" }}>Discard</button>
-                    <button className='btn btn-primary mx-1 my-1' onClick={handlePrevious} disabled={text === 'Loading...' || transcriptNumber <= 1}>Previous</button>
                     <button className='btn btn-primary mx-1 my-1' onClick={handleNext} disabled={text === 'Loading...'}>Next</button>
 
                 </div>
@@ -121,4 +119,3 @@ export default function TextForm(props) {
     );
 
 }
-
