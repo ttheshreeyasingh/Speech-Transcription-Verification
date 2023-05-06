@@ -51,21 +51,31 @@ export default function TextForm(props) {
     // const fs = require('fs');
 
     // Save button
-    const handleSave = () => {
-        // Create a new Blob object with the text content
-        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-        // Use the saveAs() function from FileSaver.js to save the file
-        const filePath = `transcript${transcriptNumber.toString().padStart(4, '0')}.txt`;
-        FileSaver.saveAs(blob, filePath);
-    };
-
+      const handleSave = () => {
+        axios.post('http://localhost:5000/save-text', {
+          text: text,
+          transcriptNumber: transcriptNumber // Add this line
+        })
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      };
+      
     // Discard button
     const handleDiscard = () => {
-        // Create a new Blob object with the text content
-        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-        // Use the saveAs() function from FileSaver.js to save the file
-        const filePath = `transcript${transcriptNumber.toString().padStart(4, '0')}.txt`;
-        FileSaver.saveAs(blob, filePath);
+        axios.post('http://localhost:5000/discard-text', {
+            text: text,
+            transcriptNumber: transcriptNumber // Add this line
+          })
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.log(error);
+          });
     };
 
 
@@ -119,3 +129,4 @@ export default function TextForm(props) {
     );
 
 }
+

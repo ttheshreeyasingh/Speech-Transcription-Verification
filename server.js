@@ -1,9 +1,18 @@
 const { exec } = require('child_process');
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors'); // add this line
 
 const app = express();
 app.use(bodyParser.json());
+
+// Enable CORS middleware to allow cross-origin requests
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 
 // Run the first script on startup
 exec('python ./main/audio-split.py', (err, stdout, stderr) => {
@@ -29,15 +38,36 @@ exec('python ./main/audio-split.py', (err, stdout, stderr) => {
   });
 });
 
-// Enable CORS middleware to allow cross-origin requests
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
+// Save the text to a file
+const fs = require('fs');
+const path = require('path');
+
+app.post('/save-text', (req, res) => {
+  const text = req.body.text;
+  const transcriptNumber = req.body.transcriptNumber;
+  const filePath = path.join(__dirname,  `./main/save/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+  fs.writeFile(filePath, text, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error saving file');
+    } else {
+      console.log('File saved successfully');
+      res.send('File saved successfully');
+    }
+  });
 });
 
-// Handle requests to run scripts here
-app.post('/run-scripts', (req, res) => {
-  // Run the scripts and send a response
+app.post('/discard-text', (req, res) => {
+  const text = req.body.text;
+  const transcriptNumber = req.body.transcriptNumber;
+  const filePath = path.join(__dirname,  `./main/discard/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+  fs.writeFile(filePath, text, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('Error saving file');
+    } else {
+      console.log('File discarded successfully');
+      res.send('File discarded successfully');
+    }
+  });
 });

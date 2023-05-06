@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TextForm from './TextForm';
 
+
 // Integrates the audio player with the transcription 
 const AudioPlayerWithTextForm = () => {
     const [transcriptNumber, setTranscriptNumber] = useState(1);
@@ -35,9 +36,10 @@ const AudioPlayerWithTextForm = () => {
                     <TextForm
                         heading={`Transcript ${transcriptNumber}`}
                         handleNext={handleNext}
-                        //handlePrevious={handlePrevious}
                         isAudio={isAudio}
+                        transcriptNumber={transcriptNumber} // Add this line
                     />
+
                 </div>
             </div>
         </>
@@ -45,3 +47,4 @@ const AudioPlayerWithTextForm = () => {
 };
 
 export default AudioPlayerWithTextForm;
+

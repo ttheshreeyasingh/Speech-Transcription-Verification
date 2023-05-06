@@ -8,6 +8,7 @@ op_path= "./frontend/speech-transcription-app/public/Original data/transcripts"
 def main(op_path):
     if os.path.isdir(op_path):
         print("Output folder already present")
+        sys.exit()
     else:
         os.mkdir(op_path)
         print("Output folder created") 
