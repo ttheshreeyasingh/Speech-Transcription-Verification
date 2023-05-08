@@ -18,7 +18,7 @@ There are 3 main components:
 - Run `node server.js` to start the server.
 - Then run `npm start` to host the app on the browser. 
 
-## Components of the Interface
+## Components of the project
 - Built with: Python3
 - Frontend - React
 - Backend - Javascript
