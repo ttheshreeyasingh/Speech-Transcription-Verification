@@ -3,17 +3,23 @@
 // Works for any number of transcripts and audio files. 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { saveAs } from 'file-saver';
-import * as FileSaver from 'file-saver';
+
 
 
 export default function TextForm(props) {
     const [text, setText] = useState('Loading...');
     const [audioSrc, setAudioSrc] = useState(null);
-
     // Using localStorage API to store the last transcript number and retrieve it when the application starts again
     const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
     const [isAudio, setIsAudio] = useState(false);
+
+
+    // // clear the local storage
+    // localStorage.clear();
+    // setTranscriptNumber(1); // Reset transcript number to 1
+    // window.location.reload();
+
+
 
     // Fetch the transcriptions and audio files 
     useEffect(() => {
@@ -51,31 +57,31 @@ export default function TextForm(props) {
     // const fs = require('fs');
 
     // Save button
-      const handleSave = () => {
+    const handleSave = () => {
         axios.post('http://localhost:5000/save-text', {
-          text: text,
-          transcriptNumber: transcriptNumber // Add this line
+            text: text,
+            transcriptNumber: transcriptNumber // Add this line
         })
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-      };
-      
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+
     // Discard button
     const handleDiscard = () => {
         axios.post('http://localhost:5000/discard-text', {
             text: text,
             transcriptNumber: transcriptNumber // Add this line
-          })
-          .then(response => {
-            console.log(response.data);
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     };
 
 
@@ -122,6 +128,7 @@ export default function TextForm(props) {
                     <button disabled={text === 'Loading...'} className='btn btn-primary mx-1 my-1' onClick={handleSave} style={{ backgroundColor: "limegreen" }}>Save</button>
                     <button disabled={text === 'Loading...'} className='btn btn-primary mx-1 my-1' onClick={handleDiscard} style={{ backgroundColor: "Red" }}>Discard</button>
                     <button className='btn btn-primary mx-1 my-1' onClick={handleNext} disabled={text === 'Loading...'}>Next</button>
+
 
                 </div>
             </div>

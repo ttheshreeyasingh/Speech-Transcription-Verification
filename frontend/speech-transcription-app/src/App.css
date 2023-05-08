@@ -47,6 +47,15 @@
     background-color: #007bff;
   }
 
+  textarea {
+    background-color: rgba(0, 0, 0, 0.5); 
+     color: #fff;
+    border: none; 
+    padding: 10px; 
+    opacity: 0.8; 
+  }
+  
+
   .progress {
     height: 40px;
     margin-top: 20px;

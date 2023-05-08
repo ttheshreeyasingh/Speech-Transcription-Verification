@@ -93,6 +93,13 @@ def vad_collector(sample_rate, frame_duration_ms,
     if voiced_frames:
         yield b''.join([f.bytes for f in voiced_frames])
 
+path = "./frontend/speech-transcription-app/public/Original data"
+if not os.path.exists(path):
+        os.makedirs(path)
+        print("Output folder created")
+else:
+        print("Output folder already present")
+        sys.exit()
 
 def folder(path):
     if not os.path.exists(path):
@@ -100,7 +107,7 @@ def folder(path):
         print("Output folder created")
     else:
         print("Output folder already present")
-        sys.exit()
+
 path = "./frontend/speech-transcription-app/public/Original data"
 folder(path)
 path = "./main/save"
