@@ -13,6 +13,7 @@ There are 3 main components:
 1. Audio Splitting
 2. Speech-to-text conversion
 3. Transcription verification 
+
 ## Instructions to run
 - Clone this directory and `cd` into it.
 - Run `node server.js` to start the server.
@@ -22,15 +23,16 @@ There are 3 main components:
 - Built with: Python3
 - Frontend - React
 - Backend - Javascript
+- UI built using Creat-React-App
 
 ### Modules used
-- UI built using Creat-React-App
-- Audio Splitting
+- Audio Splitting:
   - Pydub
   - WebRTC Voice Activity Detector (VAD)
-- Speech-to-text conversion
+- Speech-to-text conversion:
   - Speech-to-text API provided 
-- Transcription verification 
+- Transcription verification:
   - Proptypes
   - Axios
   - LocalStorage API
+  - Fetch API
