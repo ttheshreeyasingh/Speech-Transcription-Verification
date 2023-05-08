@@ -19,7 +19,7 @@ There are 3 main components:
 - Then run `npm start` to host the app on the browser. 
 
 ## Components of the Interface
-### Built with: Python3
+- Built with: Python3
 - Frontend - React
 - Backend - Javascript
 
