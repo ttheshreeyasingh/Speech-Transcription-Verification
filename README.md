@@ -1,9 +1,5 @@
 # Speech-Transcription-Verification
 
-- ## Team 1
-### Srujana vanka - 2020102005
-### Shreeya Singh - 2020102011
-
 
 ## Brief description 
 Our project aims to develop a system for verifying speech transcriptions by splitting a large audio file into smaller segments, converting each segment into text using the API provided, and presenting it to the user for verification and correction. 
@@ -96,3 +92,9 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Team 1
+
+UG2K20 batch
+- Srujana vanka - 2020102005
+- Shreeya Singh - 2020102011
