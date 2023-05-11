@@ -1,5 +1,8 @@
 # Speech-Transcription-Verification
 
+## Team 1
+### Srujana vanka - 2020102005
+### Shreeya Singh - 2020102011
 
 
 ## Brief description 
