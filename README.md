@@ -12,7 +12,7 @@ Our project aims to develop a system for verifying speech transcriptions by spli
 
 ## Interface 
 
-![](/home/shreeya/Pictures/cdceffe9-9595-4e7f-a576-c092158a5494.jpeg)
+![alt text](https://github.com/ttheshreeyasingh/Speech-Transcription-Verification/blob/main/frontend/speech-transcription-app/public/preview.png)
 
 ## Objective 
 To develop a system to verify speech transcriptions by splitting a large audio file into smaller chunks, transcribing each chunk, and presenting them to the user for verification and correction. Enabling them to either "save" or "discard" the transcriptions and move to the "next" one.
