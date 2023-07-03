@@ -3,7 +3,7 @@ import "./App.css";
 import Navbar from './components/Navbar';
 import AudioPlayerWithTextForm from './components/AudioPlayerWithTextForm';
 import Alert from './components/Alert';
-import Login from './components/Login';
+import Login from './components/Login/Login';
 
 function App() {
   const [mode, setMode] = useState('light');

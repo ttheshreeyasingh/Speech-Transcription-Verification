@@ -1,37 +1,33 @@
 import React from 'react';
-import {MDBContainer, MDBCol, MDBRow, MDBBtn, MDBInput} from 'mdb-react-ui-kit';
 import './Login.css';
 
 function Login({ onLogin }) {
-
   return (
-    <MDBContainer fluid className="p-3 my-5 h-custom">
+    <div className="login-container">
+      <div className="login-image">
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" className="img-fluid" alt="Sample" />
+      </div>
 
-      <MDBRow>
+      <div className="login-form">
+        <div className="divider d-flex align-items-center my-4">
+          {/* <p className="text-center fw-bold mx-3 mb-0">Or</p> */}
+        </div>
 
-        <MDBCol col='10' md='6'>
-          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image" />
-        </MDBCol>
+        <div className="mb-4">
+          <input className="form-control" type="email" placeholder="Email address" />
+        </div>
+        <div className="mb-4">
+          <input className="form-control" type="password" placeholder="Password" />
+        </div>
 
-        <MDBCol col='4' md='6'>
-
-          <div className="divider d-flex align-items-center my-4">
-            <p className="text-center fw-bold mx-3 mb-0">Or</p>
-          </div>
-
-          <MDBInput wrapperClass='mb-4' label='Email address' id='formControlLg' type='email' size="lg"/>
-          <MDBInput wrapperClass='mb-4' label='Password' id='formControlLg' type='password' size="lg"/>
-
-          <div className='text-center text-md-start mt-4 pt-2'>
-            <MDBBtn className="mb-0 px-5" size='lg'>Login</MDBBtn>
-            <p className="small fw-bold mt-2 pt-1 mb-2">Don't have an account? <a href="#!" className="link-danger">Sign up</a></p>
-          </div>
-
-        </MDBCol>
-
-      </MDBRow>
-
-    </MDBContainer>
+        <div className="text-center text-md-start mt-3">
+          <button className="btn btn-primary" onClick={onLogin}>Login</button>
+          <p className="mt-2">
+            <a href="#" className="link-danger">Forgot Password?</a>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
 
