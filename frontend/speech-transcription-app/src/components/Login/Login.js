@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import axios from 'axios'; // to use axios for HTTP requests
 import './Login.css';
 
 function Login({ onLogin }) {
-  const [audioFiles, setAudioFiles] = useState(['audio1.mp3', 'audio2.mp3', 'audio3.mp3']); // Initial audio file names
+  const [audioFiles, setAudioFiles] = useState(['mod_1.wav', 'Audio2.wav']); // Initial audio file names
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -18,6 +19,24 @@ function Login({ onLogin }) {
     }
   };
 
+  const handleLogin = () => {
+    if (selectedFile) {
+      onLogin(selectedFile.name); // Pass the selected file name to the onLogin function
+
+      // Make a POST request to the server with the selected file name
+      const formData = new FormData();
+      formData.append('fileName', selectedFile.name);
+
+      axios.post('http://your-backend-server-url/save-audio-file', formData)
+        .then((response) => {
+          console.log(response.data); 
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-image-bg"></div>
@@ -25,9 +44,7 @@ function Login({ onLogin }) {
       <div className="login-form">
         <h2 className="login-heading">Login</h2>
 
-        <div className="divider d-flex align-items-center my-4">
-          {/* <p className="text-center fw-bold mx-3 mb-0">Or</p> */}
-        </div>
+        <div className="divider d-flex align-items-center my-4"></div>
 
         <div className="mb-4">
           <input className="form-control" type="name" placeholder="Name" />
@@ -36,7 +53,7 @@ function Login({ onLogin }) {
           <input className="form-control" type="email" placeholder="Email Address" />
         </div>
         <div className="mb-4">
-          <select className="form-control">
+          <select className="form-control" onChange={(event) => setSelectedFile(event.target.value)}>
             <option value="">Select Audio File</option>
             {audioFiles.map((file, index) => (
               <option key={index} value={file}>{file}</option>
@@ -49,7 +66,7 @@ function Login({ onLogin }) {
         </div>
 
         <div className="text-center text-md-start mt-3">
-          <button className="btn btn-primary" onClick={onLogin}>Login</button>
+          <button className="btn btn-primary" onClick={handleLogin}>Login</button>
         </div>
       </div>
     </div>
@@ -57,3 +74,4 @@ function Login({ onLogin }) {
 }
 
 export default Login;
+
