@@ -1,10 +1,14 @@
 const { exec } = require('child_process');
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors'); // add this line
+const cors = require('cors');
+const multer = require('multer');
 
 const app = express();
 app.use(bodyParser.json());
+
+// Set up multer to handle file uploads
+const upload = multer({ dest: 'uploads/' });
 
 // Enable CORS middleware to allow cross-origin requests
 app.use(function (req, res, next) {
@@ -13,29 +17,36 @@ app.use(function (req, res, next) {
   next();
 });
 
+// Endpoint to receive the selected audio file name from the frontend and initiate audio splitting
+app.post('/save-audio-file', upload.single('fileName'), (req, res) => {
+  const fileName = req.body.fileName; // Get the selected audio file name from the request
+  const opPath = './frontend/speech-transcription-app/public/Original data'; // Output path for audio splitting
 
-// Run the first script on startup
-exec('python ./main/audio-split.py', (err, stdout, stderr) => {
-  if (err) {
-    console.error(`Error executing first script: ${err}`);
-  } else {
-    console.log(`First script output: ${stdout}`);
-  }
-
-  // Run the second script on startup, after the first script has finished
-  exec('python ./main/transcription.py', (err, stdout, stderr) => {
+  // Execute the audio_split.py script with the selected file name as an argument
+  exec(`/usr/bin/python ./main/audio-split.py ./uploads/${fileName} ${opPath}`, (err, stdout, stderr) => {
     if (err) {
-      console.error(`Error executing second script: ${err}`);
+      console.error(`Error executing audio_split.py: ${err}`);
     } else {
-      console.log(`Second script output: ${stdout}`);
+      console.log(`audio_split.py output: ${stdout}`);
+      
+      // Once audio splitting is done, execute the transcription.py script
+      exec(`/usr/bin/python ./main/transcription.py ${fileName} ${opPath}`, (err, stdout, stderr) => {
+        if (err) {
+          console.error(`Error executing transcription.py: ${err}`);
+        } else {
+          console.log(`transcription.py output: ${stdout}`);
+          
+          // Start the server after both scripts have finished
+          const PORT = 5000;
+          app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+          });
+        }
+      });
     }
-
-    // Start the server after both scripts have finished
-    const PORT = 5000;
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
   });
+
+  res.send('Audio splitting initiated');
 });
 
 // Save the text to a file
@@ -45,7 +56,14 @@ const path = require('path');
 app.post('/save-text', (req, res) => {
   const text = req.body.text;
   const transcriptNumber = req.body.transcriptNumber;
-  const filePath = path.join(__dirname, `./main/save/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+  const saveDirPath = path.join(__dirname, 'main/save/mod_1');
+  const filePath = path.join(saveDirPath, `transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+
+  // Create the save directory if it doesn't exist
+  if (!fs.existsSync(saveDirPath)) {
+    fs.mkdirSync(saveDirPath, { recursive: true });
+  }
+
   fs.writeFile(filePath, text, (err) => {
     if (err) {
       console.log(err);
@@ -57,10 +75,18 @@ app.post('/save-text', (req, res) => {
   });
 });
 
+// Discard the text
 app.post('/discard-text', (req, res) => {
   const text = req.body.text;
   const transcriptNumber = req.body.transcriptNumber;
-  const filePath = path.join(__dirname, `./main/discard/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+  const discardDirPath = path.join(__dirname, 'main/discard/mod_1');
+  const filePath = path.join(discardDirPath, `transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+
+  // Create the discard directory if it doesn't exist
+  if (!fs.existsSync(discardDirPath)) {
+    fs.mkdirSync(discardDirPath, { recursive: true });
+  }
+
   fs.writeFile(filePath, text, (err) => {
     if (err) {
       console.log(err);
