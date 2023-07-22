@@ -3,45 +3,43 @@ import json
 import os
 import sys
 
+# Check if the correct number of command-line arguments is passed
+if len(sys.argv) != 3:
+    print("Usage: python transcription.py <input_file_name> <output_path>")
+    sys.exit(1)
 
+input_file_name = os.path.splitext(sys.argv[1])[0]
+audio_chunks_directory = f"./frontend/speech-transcription-app/public/Original data/{input_file_name}/audio_chunks"
+transcripts_directory = f"./frontend/speech-transcription-app/public/Original data/{input_file_name}/transcripts"
 
-path = "./frontend/speech-transcription-app/public/Original data/transcripts"
-if not os.path.exists(path):
-        os.makedirs(path)
+def main(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
         print("Output folder created")
-else:
-        print("Output folder already present")
-        sys.exit()
-
-op_path= "./frontend/speech-transcription-app/public/Original data/transcripts"
-def main(op_path):
-    if os.path.isdir(op_path):
-        print("Output folder already present")
     else:
-        os.mkdir(op_path)
-        print("Output folder created") 
-main(op_path)    
+        print("Output folder already present")
 
-directory = './frontend/speech-transcription-app/public/Original data/audio_chunks'
-# n = number of chunks
-n = 0
-for filename in os.listdir(directory):
-    n+=1
+main(transcripts_directory)
 
-print("Number of chunks: ",n)
+# Count the number of audio chunks
+n = sum(1 for _ in os.listdir(audio_chunks_directory))
 
-for i in range(1,n+1):
-    output = subprocess.check_output("curl -k -X 'POST'   'https://asr.iiit.ac.in/ssmtapi//'    -H 'accept: application/json'    -H 'Content-Type: multipart/form-data'    -F   'uploaded_file=@./frontend/speech-transcription-app/public/Original data/audio_chunks/'chunk"+str("{:04d}".format(i))+".wav';type=audio/x-wav'    -F 'lang=eng' ", shell=True)
-    dict = json.loads(output.decode('utf-8'))
-    list = dict["transcript"] #list of dictionaries
-    j = 0
-    script = ""
-    while(j<len(list)):
-        script += list[j]["transcript"] + " "
-        j+=1
-    with open("./frontend/speech-transcription-app/public/Original data/transcripts/transcript"+str("{:04d}".format(i))+".txt", "w") as file:
+print("Number of chunks:", n)
+
+for i in range(1, n + 1):
+    chunk_path = os.path.join(audio_chunks_directory, f"chunk{str(i).zfill(4)}.wav")
+    output = subprocess.check_output(
+        f"curl -k -X 'POST' 'https://asr.iiit.ac.in/ssmtapi//' "
+        f"-H 'accept: application/json' "
+        f"-H 'Content-Type: multipart/form-data' "
+        f"-F 'uploaded_file=@{chunk_path};type=audio/x-wav' "
+        f"-F 'lang=eng'", shell=True
+    )
+    result_dict = json.loads(output.decode('utf-8'))
+    transcript_list = result_dict["transcript"]  # list of dictionaries
+    script = " ".join(item["transcript"] for item in transcript_list)
+    transcript_path = os.path.join(transcripts_directory, f"transcript{str(i).zfill(4)}.txt")
+    with open(transcript_path, "w") as file:
         file.write(script)
 
 print("Transcripts generated")
-
-
