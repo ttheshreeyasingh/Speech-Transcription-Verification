@@ -5,6 +5,12 @@ import './Login.css';
 function Login({ onLogin }) {
   const [audioFiles, setAudioFiles] = useState(['mod_1.wav', 'Audio2.wav']); // Initial audio file names
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState('telugu'); // Default language
+  const languages = ['telugu', 'english']; // Available language options
+
+  const handleLanguageChange = (event) => {
+    setSelectedLanguage(event.target.value);
+  };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -21,21 +27,30 @@ function Login({ onLogin }) {
 
   const handleLogin = () => {
     if (selectedFile) {
-      onLogin(selectedFile.name); // Pass the selected file name to the onLogin function
-
-      // Make a POST request to the server with the selected file name
-      const formData = new FormData();
-      formData.append('fileName', selectedFile.name);
-
-      axios.post('http://localhost:5000/save-audio-file', formData)
-        .then((response) => {
-          console.log(response.data); 
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      onLogin(selectedFile.name);
+      // Perform login logic with the selected language
+      onLogin(selectedLanguage);
+      localStorage.setItem('isLoggedIn', 'true'); // Set login state in localStorage
     }
-  };
+  }
+
+  // const handleLogin = () => {
+  //   if (selectedFile) {
+  //     onLogin(selectedFile.name); // Pass the selected file name to the onLogin function
+
+  //     // Make a POST request to the server with the selected file name
+  //     const formData = new FormData();
+  //     formData.append('fileName', selectedFile.name);
+
+  //     axios.post('http://localhost:5000/save-audio-file', formData)
+  //       .then((response) => {
+  //         console.log(response.data); 
+  //       })
+  //       .catch((error) => {
+  //         console.error(error);
+  //       });
+  //   }
+  // };
 
   return (
     <div className="login-container">
@@ -52,6 +67,16 @@ function Login({ onLogin }) {
         <div className="mb-4">
           <input className="form-control" type="email" placeholder="Email Address" />
         </div>
+
+        <div className="mb-4">
+          <select className="form-control">
+            <option value="">Select Language</option>
+            {languages.map((language, index) => (
+              <option key={index} value={language}>{language === 'telugu' ? 'Telugu' : 'English'}</option>
+            ))}
+          </select>
+        </div>
+
         <div className="mb-4">
           <select className="form-control" onChange={(event) => setSelectedFile(event.target.value)}>
             <option value="">Select Audio File</option>
@@ -60,10 +85,11 @@ function Login({ onLogin }) {
             ))}
           </select>
         </div>
-        <div className="mb-4">
+        
+        {/* <div className="mb-4">
           <input type="file" onChange={handleFileChange} />
           <button className="btn btn-primary" onClick={handleUpload}>Upload</button>
-        </div>
+        </div> */}
 
         <div className="text-center text-md-start mt-3">
           <button className="btn btn-primary" onClick={handleLogin}>Login</button>

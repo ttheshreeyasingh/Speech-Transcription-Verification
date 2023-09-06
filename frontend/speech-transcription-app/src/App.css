@@ -59,6 +59,18 @@ textarea {
   border-radius: 20px;
 }
 
+.logout-button {
+  position: absolute;
+  top: 90px;
+  right: 20px;
+  padding: 5px 10px;
+  background-color: #042743;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 
 /* Navigation.css */
 .navigation {
@@ -66,7 +78,7 @@ textarea {
   background-color: #f8f9fa;
   padding: 20px;
   overflow-y: scroll;
-  max-height: calc(100vh - 80px);
+  max-height: calc(100vh - 10px);
   border-right: 1px solid #e0e0e0;
 }
 
@@ -78,8 +90,8 @@ textarea {
 
 .chunk-list {
   list-style: none;
-  padding: 0;
-  margin: 0;
+  padding: 10px;
+  margin: 10px;
 }
 
 .chunk-list li {
@@ -98,7 +110,7 @@ textarea {
 }
 
 .chunk-button:hover {
-  background-color: #0056b3;
+  background-color: #042743;
 }
 
 

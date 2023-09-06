@@ -10,7 +10,7 @@ import Navigation from './components/Navigation';
 function App() {
   const [mode, setMode] = useState('light');
   const [alert, setAlert] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
   const [selectedChunk, setSelectedChunk] = useState(null);
 
   const showAlert = (message, type) => {
@@ -37,6 +37,15 @@ function App() {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
+    localStorage.setItem('isLoggedIn', 'true'); // Set login state in localStorage
+  };
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      setIsLoggedIn(false);
+      localStorage.setItem('isLoggedIn', 'false'); // Set login state in localStorage to false
+    }
   };
 
   // Inside Navigation.js
@@ -46,10 +55,14 @@ function App() {
   };
 
   
-
   return (
     <Router>
       <div className="app">
+        {isLoggedIn && (
+          <div className="logout-button" onClick={handleLogout}>
+            Logout
+          </div>
+        )}
         {isLoggedIn && <Navigation numberOfChunks={100} handleChunkSelect={handleChunkSelect} />}
         <div className="content">
           <Navbar title="Speech Transcription Verification App" mode={mode} toggleMode={toggleMode} key={new Date()} />
@@ -71,3 +84,4 @@ function App() {
 }
 
 export default App;
+
