@@ -4,11 +4,14 @@ import Navbar from './components/Navbar';
 import AudioPlayerWithTextForm from './components/AudioPlayerWithTextForm';
 import Alert from './components/Alert';
 import Login from './components/Login/Login';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import Navigation from './components/Navigation';
 
 function App() {
   const [mode, setMode] = useState('light');
   const [alert, setAlert] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [selectedChunk, setSelectedChunk] = useState(null);
 
   const showAlert = (message, type) => {
     setAlert({
@@ -36,22 +39,34 @@ function App() {
     setIsLoggedIn(true);
   };
 
-  return (
-    <>
-      <Navbar title="Speech Transcription Verification App" mode={mode} toggleMode={toggleMode} key={new Date()} />
-      <Alert alert={alert} />
+  // Inside Navigation.js
+  const handleChunkSelect = (chunkNumber) => {
+    console.log(`Selected Chunk: ${chunkNumber}`);
+    setSelectedChunk(chunkNumber);
+  };
 
-      <div className="App container py-3">
-        {isLoggedIn ? (
-          <>
-            <h3>Verify the transcription of the below audio chunk</h3>
-            <AudioPlayerWithTextForm showAlert={showAlert} mode={mode} />
-          </>
-        ) : (
-          <Login onLogin={handleLogin} />
-        )}
+  
+
+  return (
+    <Router>
+      <div className="app">
+        {isLoggedIn && <Navigation numberOfChunks={100} handleChunkSelect={handleChunkSelect} />}
+        <div className="content">
+          <Navbar title="Speech Transcription Verification App" mode={mode} toggleMode={toggleMode} key={new Date()} />
+          <Alert alert={alert} />
+
+          <div className="App container py-3">
+            {isLoggedIn ? (
+              <Switch>
+                <AudioPlayerWithTextForm selectedChunk={selectedChunk} />
+              </Switch>
+            ) : (
+              <Login onLogin={handleLogin} />
+            )}
+          </div>
+        </div>
       </div>
-    </>
+    </Router>
   );
 }
 

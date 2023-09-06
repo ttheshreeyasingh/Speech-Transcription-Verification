@@ -3,6 +3,22 @@
   font-family: Arial, sans-serif;
 }
 
+.app {
+  display: flex;
+}
+
+.navigation {
+  flex: 1;
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+.content {
+  flex: 3;
+  padding: 20px;
+}
+
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -42,3 +58,47 @@ textarea {
   background-color: #f5f5f5;
   border-radius: 20px;
 }
+
+
+/* Navigation.css */
+.navigation {
+  flex: 1;
+  background-color: #f8f9fa;
+  padding: 20px;
+  overflow-y: scroll;
+  max-height: calc(100vh - 80px);
+  border-right: 1px solid #e0e0e0;
+}
+
+.navigation-heading {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.chunk-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.chunk-list li {
+  margin-bottom: 10px;
+}
+
+.chunk-button {
+  background-color: #818a94;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  width: 70%;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.chunk-button:hover {
+  background-color: #0056b3;
+}
+
+

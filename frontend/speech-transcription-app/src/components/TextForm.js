@@ -5,27 +5,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
-
 export default function TextForm(props) {
     const [text, setText] = useState('Loading...');
     const [audioSrc, setAudioSrc] = useState(null);
-    // Using localStorage API to store the last transcript number and retrieve it when the application starts again
-    const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
     const [isAudio, setIsAudio] = useState(false);
+    const selectedChunk = props.selectedChunk;
+     // Using localStorage API to store the last transcript number and retrieve it when the application starts again
+    const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
+    // const [transcriptNumber, setTranscriptNumber] = useState(selectedChunk || 1);
 
-
-    // // clear the local storage
-    // localStorage.clear();
-    // setTranscriptNumber(1); // Reset transcript number to 1
-    // window.location.reload();
-
-
-
-    // Fetch the transcriptions and audio files 
     useEffect(() => {
         const fetchText = async () => {
             try {
-                const response = await axios.get(`./Original data/transcripts/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+                const response = await axios.get(`${process.env.PUBLIC_URL}/Original data/transcripts/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
                 setText(response.data);
                 setIsAudio(false);
             } catch (error) {
@@ -54,7 +46,14 @@ export default function TextForm(props) {
         }
     }, [transcriptNumber, props.isAudio]);
 
-    // const fs = require('fs');
+
+    // Using localStorage API to store the last transcript number and retrieve it when the application starts again
+    // const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
+   
+    // clear the local storage
+    // localStorage.clear();
+    // setTranscriptNumber(1); // Reset transcript number to 1
+    // window.location.reload();
 
     // Save button
     const handleSave = () => {
@@ -92,7 +91,7 @@ export default function TextForm(props) {
 
         // Fetch the new transcript text
         try {
-            const response = await axios.get(`./Original data/transcripts/transcript${(transcriptNumber + 1).toString().padStart(4, '0')}.txt`);
+            const response = await axios.get(`${process.env.PUBLIC_URL}/Original data/transcripts/transcript${(transcriptNumber + 1).toString().padStart(4, '0')}.txt`);
             setText(response.data);
         } catch (error) {
             console.error(error);
