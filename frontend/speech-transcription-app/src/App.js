@@ -85,3 +85,19 @@ function App() {
 
 export default App;
 
+
+// To test the keyboard
+
+// import React from 'react';
+// import TestKeyboard from './components/test';
+
+// const App = () => {
+//   return (
+//     <div>
+//       <h1>Testing Virtual Keyboard</h1>
+//       <TestKeyboard />
+//     </div>
+//   );
+// };
+
+// export default App;
