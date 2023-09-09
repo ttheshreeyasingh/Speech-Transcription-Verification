@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Add this line to use axios for HTTP requests
+import axios from 'axios';
 import './Login.css';
 
 function Login({ onLogin }) {
@@ -7,50 +7,61 @@ function Login({ onLogin }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState('telugu'); // Default language
   const languages = ['telugu', 'english']; // Available language options
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
 
   const handleLanguageChange = (event) => {
     setSelectedLanguage(event.target.value);
   };
-
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setSelectedFile(file);
+    setSelectedFile(event.target.value);
   };
 
-  const handleUpload = () => {
-    if (selectedFile) {
-      // Add the uploaded file to the dropdown options
-      const fileName = selectedFile.name;
-      setAudioFiles((prevFiles) => [...prevFiles, fileName]);
+  const handleLogin = async () => {
+    if (name && email && selectedLanguage && selectedFile) {
+      const loginData = {
+        name,
+        email,
+        selectedLanguage,
+        selectedFile
+      };
+
+      try {
+        const fileName = 'login.json';
+
+        // Using localStorage to store the data
+        const existingData = localStorage.getItem('loginData');
+        if (existingData) {
+          // Append new login data to the existing data
+          const newData = JSON.parse(existingData);
+          newData.push(loginData);
+          localStorage.setItem('loginData', JSON.stringify(newData));
+        } else {
+          // Create a new array and store the login data
+          localStorage.setItem('loginData', JSON.stringify([loginData]));
+        }
+
+        // Perform login logic with the selected language
+        onLogin(selectedLanguage);
+
+      } catch (error) {
+        console.error('Error saving login data:', error);
+        alert('Error saving login data.');
+      }
+    } else {
+      alert('Please fill in all fields.');
     }
   };
 
-  const handleLogin = () => {
-    if (selectedFile) {
-      onLogin(selectedFile.name);
-      // Perform login logic with the selected language
-      onLogin(selectedLanguage);
-      localStorage.setItem('isLoggedIn', 'true'); // Set login state in localStorage
-    }
-  }
-
-  // const handleLogin = () => {
-  //   if (selectedFile) {
-  //     onLogin(selectedFile.name); // Pass the selected file name to the onLogin function
-
-  //     // Make a POST request to the server with the selected file name
-  //     const formData = new FormData();
-  //     formData.append('fileName', selectedFile.name);
-
-  //     axios.post('http://localhost:5000/save-audio-file', formData)
-  //       .then((response) => {
-  //         console.log(response.data); 
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }
-  // };
 
   return (
     <div className="login-container">
@@ -62,20 +73,21 @@ function Login({ onLogin }) {
         <div className="divider d-flex align-items-center my-4"></div>
 
         <div className="mb-4">
-          <input className="form-control" type="name" placeholder="Name" />
+          <input className="form-control" type="name" placeholder="Name" onChange={handleNameChange} />
         </div>
         <div className="mb-4">
-          <input className="form-control" type="email" placeholder="Email Address" />
+          <input className="form-control" type="email" placeholder="Email Address" onChange={handleEmailChange} />
         </div>
 
         <div className="mb-4">
-          <select className="form-control">
+          <select className="form-control" onChange={handleLanguageChange}>
             <option value="">Select Language</option>
             {languages.map((language, index) => (
               <option key={index} value={language}>{language === 'telugu' ? 'Telugu' : 'English'}</option>
             ))}
           </select>
         </div>
+
 
         <div className="mb-4">
           <select className="form-control" onChange={(event) => setSelectedFile(event.target.value)}>
@@ -85,14 +97,11 @@ function Login({ onLogin }) {
             ))}
           </select>
         </div>
-        
-        {/* <div className="mb-4">
-          <input type="file" onChange={handleFileChange} />
-          <button className="btn btn-primary" onClick={handleUpload}>Upload</button>
-        </div> */}
 
         <div className="text-center text-md-start mt-3">
-          <button className="btn btn-primary" onClick={handleLogin}>Login</button>
+          <button className="btn btn-primary" onClick={handleLogin}>
+            Login
+          </button>
         </div>
       </div>
     </div>

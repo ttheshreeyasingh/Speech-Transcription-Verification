@@ -71,6 +71,17 @@ textarea {
   cursor: pointer;
 }
 
+.download-button {
+  position: absolute;
+  top: 120px;
+  right: 10px;
+  padding: 5px 10px;
+  color: #042743;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 
 /* Navigation.css */
 .navigation {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import "./App.css";
+import './App.css';
 import Navbar from './components/Navbar';
 import AudioPlayerWithTextForm from './components/AudioPlayerWithTextForm';
 import Alert from './components/Alert';
@@ -12,6 +12,12 @@ function App() {
   const [alert, setAlert] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
   const [selectedChunk, setSelectedChunk] = useState(null);
+
+  const [loginData, setLoginData] = useState({
+    name: '',
+    email: '',
+    selectedLanguage: '',
+  });
 
   const showAlert = (message, type) => {
     setAlert({
@@ -48,6 +54,34 @@ function App() {
     }
   };
 
+  // Function to handle download of login data
+  const handleDownloadLoginData = () => {
+    const loginData = localStorage.getItem('loginData'); // Retrieve the login data from local storage
+
+    if (loginData) {
+      // Create a Blob with the login data as text
+      const blob = new Blob([JSON.stringify(JSON.parse(loginData), null, 2)], { type: 'text/plain' });
+
+      // Create a URL for the Blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a download link
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'login_data.txt'; // Set the filename for the downloaded text file
+      a.style.display = 'none';
+
+      // Append the download link to the document and trigger the download
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up by revoking the Blob URL
+      window.URL.revokeObjectURL(url);
+    } else {
+      alert('No login data found.');
+    }
+  };
+
   // Inside Navigation.js
   const handleChunkSelect = (chunkNumber) => {
     console.log(`Selected Chunk: ${chunkNumber}`);
@@ -63,6 +97,13 @@ function App() {
             Logout
           </div>
         )}
+
+        {isLoggedIn && (
+          <div className="download-button" onClick={handleDownloadLoginData}>
+            Download Login Data
+          </div>
+        )}
+
         {isLoggedIn && <Navigation numberOfChunks={100} handleChunkSelect={handleChunkSelect} />}
         <div className="content">
           <Navbar title="Speech Transcription Verification App" mode={mode} toggleMode={toggleMode} key={new Date()} />
@@ -84,20 +125,3 @@ function App() {
 }
 
 export default App;
-
-
-// To test the keyboard
-
-// import React from 'react';
-// import TestKeyboard from './components/test';
-
-// const App = () => {
-//   return (
-//     <div>
-//       <h1>Testing Virtual Keyboard</h1>
-//       <TestKeyboard />
-//     </div>
-//   );
-// };
-
-// export default App;
