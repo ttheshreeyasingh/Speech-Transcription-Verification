@@ -99,7 +99,7 @@ function Login({ onLogin }) {
         </div>
 
         <div className="text-center text-md-start mt-3">
-          <button className="btn btn-primary" onClick={handleLogin}>
+          <button className="login-button" onClick={handleLogin}>
             Login
           </button>
         </div>

@@ -5,7 +5,10 @@
 
 .login-image-bg {
   flex: 0.2;
-  background-color: #042743;
+  background-image: url('./background_image.jpg'); /* Replace with the actual path to your image */
+  background-size: cover; 
+  background-repeat: no-repeat;
+  background-position: right;
 }
 
 .login-form {
@@ -51,6 +54,21 @@
 
 .text-md-start {
   text-align: left;
+}
+
+.login-button{
+  background-color: #042743;
+  color: white;
+  padding: 14px 36px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.login-button:hover {
+  background: linear-gradient(to bottom, #042743, #0056b3);
+  transform: scale(1.02);
 }
 
 .btn-primary {
