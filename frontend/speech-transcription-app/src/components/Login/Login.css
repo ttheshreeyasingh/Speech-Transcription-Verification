@@ -1,0 +1,79 @@
+.login-container {
+  display: flex;
+  height: 80vh;
+}
+
+.login-image-bg {
+  flex: 0.2;
+  background-color: #042743;
+}
+
+.login-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 40px;
+}
+
+.login-form input[type="name"],
+.login-form input[type="email"] {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 24px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 18px;
+}
+
+.login-form select {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 24px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 18px;
+}
+
+.divider:after,
+.divider:before {
+  content: "";
+  flex: 1;
+  height: 4px;
+  background: #eee;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-md-start {
+  text-align: left;
+}
+
+.btn-primary {
+  background-color: #042743;
+  color: white;
+  padding: 14px 36px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.btn-primary:hover {
+  background-color: darkblue;
+}
+
+.link-danger {
+  color: red;
+}
+
+/* Responsive styles */
+@media (max-width: 450px) {
+  .login-container {
+    height: 100%;
+  }
+}

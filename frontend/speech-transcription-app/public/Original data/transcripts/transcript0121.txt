@@ -1,1 +1,0 @@
-for   twenty five ct case  travelling salman has to move  around in find shortest path between those twenty five cities 

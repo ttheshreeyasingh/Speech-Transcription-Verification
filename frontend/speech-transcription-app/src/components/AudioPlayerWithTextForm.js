@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import TextForm from './TextForm';
 
-
-// Integrates the audio player with the transcription 
-const AudioPlayerWithTextForm = () => {
-    const [transcriptNumber, setTranscriptNumber] = useState(1);
+const AudioPlayerWithTextForm = ({ selectedChunk }) => {
+    const [transcriptNumber, setTranscriptNumber] = useState(selectedChunk);
+    console.log(`dd: ${transcriptNumber}`)
     const [isAudio, setIsAudio] = useState(false);
 
-    // Increments the index on clicking next button
+    useEffect(() => {
+        // Update transcriptNumber when selectedChunk changes
+        setTranscriptNumber(selectedChunk);
+    }, [selectedChunk]);
+
     const handleNext = () => {
         setTranscriptNumber((prevNumber) => prevNumber + 1);
         setIsAudio(false);
     };
-
-    // Decrements the index on clicking previous button 
-    // const handlePrevious = () => {
-    //     if (transcriptNumber > 1) {
-    //         setTranscriptNumber((prevNumber) => prevNumber - 1);
-    //         setIsAudio(false);
-    //     }
-    // };
 
     useEffect(() => {
         setIsAudio(false);
@@ -37,9 +32,9 @@ const AudioPlayerWithTextForm = () => {
                         heading={`Transcript ${transcriptNumber}`}
                         handleNext={handleNext}
                         isAudio={isAudio}
-                        transcriptNumber={transcriptNumber} // Add this line
+                        transcriptNumber={transcriptNumber}
+                        selectedChunk={selectedChunk}
                     />
-
                 </div>
             </div>
         </>
@@ -47,4 +42,3 @@ const AudioPlayerWithTextForm = () => {
 };
 
 export default AudioPlayerWithTextForm;
-

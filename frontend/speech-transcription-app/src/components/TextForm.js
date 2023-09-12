@@ -2,30 +2,24 @@
 // 'Original data' folder which is present in the public folder
 // Works for any number of transcripts and audio files. 
 import React, { useState, useEffect } from 'react';
+import VirtualKeyboard from './keyboard';
 import axios from 'axios';
-
 
 
 export default function TextForm(props) {
     const [text, setText] = useState('Loading...');
     const [audioSrc, setAudioSrc] = useState(null);
-    // Using localStorage API to store the last transcript number and retrieve it when the application starts again
-    const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
     const [isAudio, setIsAudio] = useState(false);
-
-
-    // // clear the local storage
-    // localStorage.clear();
-    // setTranscriptNumber(1); // Reset transcript number to 1
-    // window.location.reload();
-
-
-
-    // Fetch the transcriptions and audio files 
+    const selectedChunk = props.selectedChunk;
+     // Using localStorage API to store the last transcript number and retrieve it when the application starts again
+    const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
+    // const [transcriptNumber, setTranscriptNumber] = useState(selectedChunk || 1);
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
+    
     useEffect(() => {
         const fetchText = async () => {
             try {
-                const response = await axios.get(`./Original data/transcripts/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+                const response = await axios.get(`${process.env.PUBLIC_URL}/Original data/transcripts/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
                 setText(response.data);
                 setIsAudio(false);
             } catch (error) {
@@ -54,7 +48,14 @@ export default function TextForm(props) {
         }
     }, [transcriptNumber, props.isAudio]);
 
-    // const fs = require('fs');
+
+    // Using localStorage API to store the last transcript number and retrieve it when the application starts again
+    // const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
+   
+    // clear the local storage
+    // localStorage.clear();
+    // setTranscriptNumber(1); // Reset transcript number to 1
+    // window.location.reload();
 
     // Save button
     const handleSave = () => {
@@ -92,12 +93,29 @@ export default function TextForm(props) {
 
         // Fetch the new transcript text
         try {
-            const response = await axios.get(`./Original data/transcripts/transcript${(transcriptNumber + 1).toString().padStart(4, '0')}.txt`);
+            const response = await axios.get(`${process.env.PUBLIC_URL}/Original data/transcripts/transcript${(transcriptNumber + 1).toString().padStart(4, '0')}.txt`);
             setText(response.data);
         } catch (error) {
             console.error(error);
         }
     };
+    
+    const handleTextareaClick = () => {
+        setKeyboardVisible(true);
+    };
+
+    const handleBackspace = () => {
+        // Define the logic for handling backspace here
+        setText(prevText => prevText.slice(0, -1)); // Removes the last character
+      };
+      
+      const handleSpace = () => {
+        setText(prevText => prevText + ' '); // Adds a space
+      };
+      
+      const handleEnter = () => {
+        setKeyboardVisible(false); // Hide the virtual keyboard
+      };
 
     return (
         <>
@@ -112,17 +130,27 @@ export default function TextForm(props) {
                         </div>
                     )}
                     <h3>Transcript {transcriptNumber}</h3>
+                    <div onClick={handleTextareaClick} style={{ position: 'relative' }}>
                     <textarea
                         className='form-control'
                         style={{
                             backgroundColor: props.mode === 'dark' ? '#13466e' : 'white',
                             color: props.mode === 'dark' ? 'white' : '#042743',
+                            width: '45rem',
                         }}
                         id='myBox'
                         rows='8'
                         onChange={(event) => setText(event.target.value)}
                         value={text}
                     />
+                     {keyboardVisible && (
+              <VirtualKeyboard onChange={setText} 
+              onBackspace={handleBackspace}
+              onSpace={handleSpace}
+              onEnter={handleEnter}
+              />
+            )}
+                    </div>
                 </div>
                 <div className="d-flex justify-content-center">
                     <button disabled={text === 'Loading...'} className='btn btn-primary mx-1 my-1' onClick={handleSave} style={{ backgroundColor: "limegreen" }}>Save</button>

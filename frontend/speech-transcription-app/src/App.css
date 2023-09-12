@@ -1,64 +1,127 @@
 .App {
-    text-align: center;
-  }
-  
-  .App-logo {
-    height: 40vmin;
-    pointer-events: none;
-  }
-  
-  @media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-      animation: App-logo-spin infinite 20s linear;
-    }
-  }
-  
-  .App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-  }
-  
-  .App-link {
-    color: #61dafb;
-  }
-  
-  @keyframes App-logo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  .blank{
-    color: rgb(32, 8, 246);
-  }
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
 
-  .progress-bar {
-    height: 40px;
-    border-radius: 20px;
-    background-color: #007bff;
-  }
+.app {
+  display: flex;
+}
 
-  textarea {
-    background-color: rgba(0, 0, 0, 0.5); 
-     color: #fff;
-    border: none; 
-    padding: 10px; 
-    opacity: 0.8; 
-  }
-  
+.navigation {
+  flex: 1;
+  background-color: #f0f0f0;
+  padding: 20px;
+}
 
-  .progress {
-    height: 40px;
-    margin-top: 20px;
-    background-color: #f5f5f5;
-    border-radius: 20px;
-  }
+.content {
+  flex: 3;
+  padding: 20px;
+}
+
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.blank {
+  color: #2008f6;
+}
+
+.progress-bar {
+  height: 40px;
+  border-radius: 20px;
+  background-color: #007bff;
+}
+
+textarea {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  padding: 10px;
+  opacity: 0.8;
+}
+
+.progress {
+  height: 40px;
+  margin-top: 20px;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+}
+
+.logout-button {
+  position: absolute;
+  top: 90px;
+  right: 20px;
+  padding: 5px 10px;
+  background-color: #042743;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.download-button {
+  position: absolute;
+  top: 120px;
+  right: 10px;
+  padding: 5px 10px;
+  color: #042743;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+/* Navigation.css */
+.navigation {
+  flex: 1;
+  background-color: #f8f9fa;
+  padding: 20px;
+  overflow-y: scroll;
+  max-height: calc(100vh - 10px);
+  border-right: 1px solid #e0e0e0;
+}
+
+.navigation-heading {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.chunk-list {
+  list-style: none;
+  padding: 10px;
+  margin: 10px;
+}
+
+.chunk-list li {
+  margin-bottom: 10px;
+}
+
+.chunk-button {
+  background-color: #818a94;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  width: 70%;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.chunk-button:hover {
+  background-color: #042743;
+}
+
+
