@@ -1,1 +1,0 @@
-my database suppose if i have a database  have index my database on customer name but if i provide an incorrect customer name and my database return with right customers data 

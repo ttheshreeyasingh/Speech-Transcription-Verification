@@ -1,1 +1,0 @@
-when we store information in object oriented representation 

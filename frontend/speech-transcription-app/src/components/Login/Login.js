@@ -3,7 +3,7 @@ import axios from 'axios';
 import './Login.css';
 
 function Login({ onLogin }) {
-  const [audioFiles, setAudioFiles] = useState(['mod_1.wav', 'Audio2.wav']); // Initial audio file names
+  const [audioFiles, setAudioFiles] = useState(['mod_1.wav', 'Audio2.wav', 'final.wav']); // Initial audio file names
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState('telugu'); // Default language
   const languages = ['telugu', 'english']; // Available language options

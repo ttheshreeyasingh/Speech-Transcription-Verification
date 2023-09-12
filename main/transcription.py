@@ -29,7 +29,7 @@ for filename in os.listdir(directory):
 print("Number of chunks: ",n)
 
 for i in range(1,n+1):
-    output = subprocess.check_output("curl -k -X 'POST'   'https://asr.iiit.ac.in/ssmtapi//'    -H 'accept: application/json'    -H 'Content-Type: multipart/form-data'    -F   'uploaded_file=@./frontend/speech-transcription-app/public/Original data/audio_chunks/'chunk"+str("{:04d}".format(i))+".wav';type=audio/x-wav'    -F 'lang=eng' ", shell=True)
+    output = subprocess.check_output("curl -k -X 'POST'   'https://asr.iiit.ac.in/ssmtapi//'    -H 'accept: application/json'    -H 'Content-Type: multipart/form-data'    -F   'uploaded_file=@./frontend/speech-transcription-app/public/Original data/audio_chunks/'chunk"+str("{:04d}".format(i))+".wav';type=audio/x-wav'    -F 'lang=tel' ", shell=True)
     dict = json.loads(output.decode('utf-8'))
     list = dict["transcript"] #list of dictionaries
     j = 0
