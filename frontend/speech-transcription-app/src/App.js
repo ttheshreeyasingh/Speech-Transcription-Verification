@@ -127,7 +127,7 @@ function App() {
           </div>
         )}
 
-        {isLoggedIn && <Navigation numberOfChunks={100} handleChunkSelect={handleChunkSelect} />}
+        {isLoggedIn && <Navigation numberOfChunks={57} handleChunkSelect={handleChunkSelect} />}
         <div className="content">
           <Navbar title="Speech Transcription Verification App" mode={mode} toggleMode={toggleMode} key={new Date()} />
           <Alert alert={alert} />
