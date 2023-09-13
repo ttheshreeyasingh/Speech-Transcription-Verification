@@ -6,6 +6,7 @@ const Navigation = ({ numberOfChunks, handleChunkSelect }) => {
   const chunkLinks = Array.from({ length: numberOfChunks }, (_, index) => (
     <li key={index}>
       <button className="chunk-button" onClick={() => handleChunkSelect(index + 1)}>
+
         Chunk {index + 1}
       </button>
     </li>
@@ -18,5 +19,6 @@ const Navigation = ({ numberOfChunks, handleChunkSelect }) => {
     </div>
   );
 };
+
 
 export default Navigation;

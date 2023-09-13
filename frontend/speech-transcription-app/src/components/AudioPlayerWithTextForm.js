@@ -1,20 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TextForm from './TextForm';
 
-const AudioPlayerWithTextForm = ({ selectedChunk }) => {
-    const [transcriptNumber, setTranscriptNumber] = useState(selectedChunk);
-    console.log(`dd: ${transcriptNumber}`)
-    const [isAudio, setIsAudio] = useState(false);
-
-    useEffect(() => {
-        // Update transcriptNumber when selectedChunk changes
-        setTranscriptNumber(selectedChunk);
-    }, [selectedChunk]);
-
-    const handleNext = () => {
-        setTranscriptNumber((prevNumber) => prevNumber + 1);
-        setIsAudio(false);
-    };
+const AudioPlayerWithTextForm = ({selectedChunk, transcriptNumber, setTranscriptNumber , text, setText, isAudio, setIsAudio, audioSrc, setAudioSrc}) => {
 
     useEffect(() => {
         setIsAudio(false);
@@ -30,9 +17,14 @@ const AudioPlayerWithTextForm = ({ selectedChunk }) => {
                 <div className="col">
                     <TextForm
                         heading={`Transcript ${transcriptNumber}`}
-                        handleNext={handleNext}
-                        isAudio={isAudio}
                         transcriptNumber={transcriptNumber}
+                        setTranscriptNumber={setTranscriptNumber}
+                        text={text}
+                        audioSrc={audioSrc}
+                        isAudio={isAudio}
+                        setText={setText}
+                        setAudioSrc={setAudioSrc}
+                        setIsAudio={setIsAudio}
                         selectedChunk={selectedChunk}
                     />
                 </div>

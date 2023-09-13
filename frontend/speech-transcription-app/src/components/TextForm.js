@@ -1,21 +1,19 @@
-// The audio chunks and the transcriptions are fetched from the 
-// 'Original data' folder which is present in the public folder
-// Works for any number of transcripts and audio files. 
 import React, { useState, useEffect } from 'react';
 import VirtualKeyboard from './keyboard';
 import axios from 'axios';
 
-
 export default function TextForm(props) {
-    const [text, setText] = useState('Loading...');
-    const [audioSrc, setAudioSrc] = useState(null);
-    const [isAudio, setIsAudio] = useState(false);
+    const text = props.text;
+    const setText = props.setText;
+    const audioSrc = props.audioSrc;
+    const setAudioSrc = props.setAudioSrc;
+    const isAudio = props.isAudio;
+    const setIsAudio = props.setIsAudio;
     const selectedChunk = props.selectedChunk;
-     // Using localStorage API to store the last transcript number and retrieve it when the application starts again
-    const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
-    // const [transcriptNumber, setTranscriptNumber] = useState(selectedChunk || 1);
+    const transcriptNumber = props.transcriptNumber;
+    const setTranscriptNumber = props.setTranscriptNumber;    
     const [keyboardVisible, setKeyboardVisible] = useState(false);
-    
+ 
     useEffect(() => {
         const fetchText = async () => {
             try {
@@ -47,10 +45,6 @@ export default function TextForm(props) {
             fetchText();
         }
     }, [transcriptNumber, props.isAudio]);
-
-
-    // Using localStorage API to store the last transcript number and retrieve it when the application starts again
-    // const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
    
     // clear the local storage
     // localStorage.clear();
@@ -99,7 +93,7 @@ export default function TextForm(props) {
             console.error(error);
         }
     };
-    
+
     const handleTextareaClick = () => {
         setKeyboardVisible(true);
     };
