@@ -14,27 +14,30 @@ app.use(function (req, res, next) {
 });
 
 // Function to run Python scripts
-function runPythonScript(scriptPath) {
-  exec(`python ${scriptPath}`, (err, stdout, stderr) => {
-    if (err) {
-      console.error(`Error executing ${scriptPath}: ${err}`);
-    } else {
-      console.log(`${scriptPath} output: ${stdout}`);
-    }
-  });
-}
+// function runPythonScript(scriptPath) {
+//   exec(`python ${scriptPath}`, (err, stdout, stderr) => {
+//     if (err) {
+//       console.error(`Error executing ${scriptPath}: ${err}`);
+//     } else {
+//       console.log(`${scriptPath} output: ${stdout}`);
+//     }
+//   });
+// }
 
 // Run the first script on startup
-runPythonScript('./main/audio-split.py');
+// runPythonScript('./main/audio-split.py');
 
 // Run the second script on startup, after the first script has finished
-setTimeout(() => {
-  runPythonScript('./main/transcription.py');
-}, 5000); // Adjust the delay (in milliseconds) as needed to ensure the first script has finished
+// setTimeout(() => {
+//   runPythonScript('./main/transcription.py');
+// }, 5000); // Adjust the delay (in milliseconds) as needed to ensure the first script has finished
 
 // Save the text to a file
 const fs = require('fs');
 const path = require('path');
+
+let savedTranscripts = [];
+let discardedTranscripts = [];
 
 app.post('/save-text', (req, res) => {
   const text = req.body.text;
@@ -46,6 +49,7 @@ app.post('/save-text', (req, res) => {
       res.status(500).send('Error saving file');
     } else {
       console.log('File saved successfully');
+      savedTranscripts.push(transcriptNumber); // Update the saved transcripts array
       res.send('File saved successfully');
     }
   });
@@ -61,9 +65,20 @@ app.post('/discard-text', (req, res) => {
       res.status(500).send('Error saving file');
     } else {
       console.log('File discarded successfully');
+      discardedTranscripts.push(transcriptNumber); // Update the discarded transcripts array
       res.send('File discarded successfully');
     }
   });
+});
+
+// Endpoint to get the list of saved transcripts
+app.get('/get-saved-transcripts', (req, res) => {
+  res.json({ savedTranscripts });
+});
+
+// Endpoint to get the list of discarded transcripts
+app.get('/get-discarded-transcripts', (req, res) => {
+  res.json({ discardedTranscripts });
 });
 
 // Start the server

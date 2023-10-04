@@ -16,7 +16,8 @@ function App() {
   const [alert, setAlert] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
   const [selectedChunk, setSelectedChunk] = useState(null);
-   // Using localStorage API to store the last transcript number and retrieve it when the application starts again
+  const [chunkColors, setChunkColors] = useState(Array(57).fill(''));
+  // Using localStorage API to store the last transcript number and retrieve it when the application starts again
   const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
 
 
@@ -89,28 +90,28 @@ function App() {
     }
   };
 
-  const handleChunkSelect  = async (chunkNumber) =>  {
+  const handleChunkSelect = async (chunkNumber) => {
     console.log(`chunk number: ${chunkNumber}`);
     setSelectedChunk(chunkNumber);
     setTranscriptNumber(chunkNumber);
     setIsAudio(true);
     console.log(`transcriptNumber: ${chunkNumber}`)
     try {
-        
-        const responseText = await axios.get(`${process.env.PUBLIC_URL}/Original data/transcripts/transcript${chunkNumber.toString().padStart(4, '0')}.txt`);
-        setText(responseText.data);
 
-        const responseAudio = await axios.get(`${process.env.PUBLIC_URL}/Original data/audio_chunks/chunk${chunkNumber.toString().padStart(4, '0')}.wav`, {
-            responseType: 'blob'
-        });
-        const blob = new Blob([responseAudio.data]);
-        const url = URL.createObjectURL(blob);
-        setAudioSrc(url);
-        localStorage.setItem('transcriptNumber', chunkNumber);
+      const responseText = await axios.get(`${process.env.PUBLIC_URL}/Original data/transcripts/transcript${chunkNumber.toString().padStart(4, '0')}.txt`);
+      setText(responseText.data);
+
+      const responseAudio = await axios.get(`${process.env.PUBLIC_URL}/Original data/audio_chunks/chunk${chunkNumber.toString().padStart(4, '0')}.wav`, {
+        responseType: 'blob'
+      });
+      const blob = new Blob([responseAudio.data]);
+      const url = URL.createObjectURL(blob);
+      setAudioSrc(url);
+      localStorage.setItem('transcriptNumber', chunkNumber);
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
-};
+  };
 
   return (
     <Router>
@@ -127,7 +128,14 @@ function App() {
           </div>
         )}
 
-        {isLoggedIn && <Navigation numberOfChunks={57} handleChunkSelect={handleChunkSelect} />}
+        {isLoggedIn && (
+          <Navigation
+            numberOfChunks={57}
+            handleChunkSelect={handleChunkSelect}
+            chunkColors={chunkColors}
+            setChunkColors={setChunkColors} // Pass setChunkColors to Navigation
+          />
+        )}
         <div className="content">
           <Navbar title="Speech Transcription Verification App" mode={mode} toggleMode={toggleMode} key={new Date()} />
           <Alert alert={alert} />
@@ -136,16 +144,17 @@ function App() {
             {isLoggedIn ? (
               <Switch>
                 <AudioPlayerWithTextForm
-                 selectedChunk = {selectedChunk} 
-                 transcriptNumber={transcriptNumber} 
-                 setTranscriptNumber={setTranscriptNumber}
-                 text={text}
+                  selectedChunk={selectedChunk}
+                  transcriptNumber={transcriptNumber}
+                  setTranscriptNumber={setTranscriptNumber}
+                  text={text}
                   audioSrc={audioSrc}
                   isAudio={isAudio}
                   setText={setText}
                   setAudioSrc={setAudioSrc}
                   setIsAudio={setIsAudio}
-                 />
+                  setChunkColors={setChunkColors}
+                />
               </Switch>
             ) : (
               <Login onLogin={handleLogin} />

@@ -9,11 +9,10 @@ export default function TextForm(props) {
     const setAudioSrc = props.setAudioSrc;
     const isAudio = props.isAudio;
     const setIsAudio = props.setIsAudio;
-    const selectedChunk = props.selectedChunk;
     const transcriptNumber = props.transcriptNumber;
-    const setTranscriptNumber = props.setTranscriptNumber;    
+    const setTranscriptNumber = props.setTranscriptNumber;
     const [keyboardVisible, setKeyboardVisible] = useState(false);
- 
+
     useEffect(() => {
         const fetchText = async () => {
             try {
@@ -45,36 +44,59 @@ export default function TextForm(props) {
             fetchText();
         }
     }, [transcriptNumber, props.isAudio]);
-   
-    // clear the local storage
-    // localStorage.clear();
-    // setTranscriptNumber(1); // Reset transcript number to 1
-    // window.location.reload();
 
     // Save button
     const handleSave = () => {
-        axios.post('http://localhost:5000/save-text', {
-            text: text,
-            transcriptNumber: transcriptNumber // Add this line
-        })
-            .then(response => {
-                console.log(response.data);
+        axios
+            .post('http://localhost:5000/save-text', {
+                text: text,
+                transcriptNumber: transcriptNumber,
             })
-            .catch(error => {
+            .then((response) => {
+                console.log(response.data);
+                // Set the chunk color to green upon successful save
+                props.setChunkColors((prevColors) => {
+                    const updatedColors = [...prevColors];
+                    updatedColors[transcriptNumber - 1] = 'green';
+
+                    // Store updatedChunkColors in localStorage
+                    localStorage.setItem('chunkColors', JSON.stringify(updatedColors));
+
+                    return updatedColors;
+                });
+
+                // Call the onSave function to update the saved count
+                props.onSave();
+            })
+            .catch((error) => {
                 console.log(error);
             });
     };
 
     // Discard button
     const handleDiscard = () => {
-        axios.post('http://localhost:5000/discard-text', {
-            text: text,
-            transcriptNumber: transcriptNumber // Add this line
-        })
-            .then(response => {
-                console.log(response.data);
+        axios
+            .post('http://localhost:5000/discard-text', {
+                text: text,
+                transcriptNumber: transcriptNumber,
             })
-            .catch(error => {
+            .then((response) => {
+                console.log(response.data);
+                // Set the chunk color to red upon successful discard
+                props.setChunkColors((prevColors) => {
+                    const updatedColors = [...prevColors];
+                    updatedColors[transcriptNumber - 1] = 'red';
+
+                    // Store updatedChunkColors in localStorage
+                    localStorage.setItem('chunkColors', JSON.stringify(updatedColors));
+
+                    return updatedColors;
+                });
+
+                // Call the onDiscard function to update the discarded count
+                props.onDiscard();
+            })
+            .catch((error) => {
                 console.log(error);
             });
     };
@@ -101,15 +123,15 @@ export default function TextForm(props) {
     const handleBackspace = () => {
         // Define the logic for handling backspace here
         setText(prevText => prevText.slice(0, -1)); // Removes the last character
-      };
-      
-      const handleSpace = () => {
+    };
+
+    const handleSpace = () => {
         setText(prevText => prevText + ' '); // Adds a space
-      };
-      
-      const handleEnter = () => {
+    };
+
+    const handleEnter = () => {
         setKeyboardVisible(false); // Hide the virtual keyboard
-      };
+    };
 
     return (
         <>
@@ -125,25 +147,25 @@ export default function TextForm(props) {
                     )}
                     <h3>Transcript {transcriptNumber}</h3>
                     <div onClick={handleTextareaClick} style={{ position: 'relative' }}>
-                    <textarea
-                        className='form-control'
-                        style={{
-                            backgroundColor: props.mode === 'dark' ? '#13466e' : 'white',
-                            color: props.mode === 'dark' ? 'white' : '#042743',
-                            width: '45rem',
-                        }}
-                        id='myBox'
-                        rows='8'
-                        onChange={(event) => setText(event.target.value)}
-                        value={text}
-                    />
-                     {keyboardVisible && (
-              <VirtualKeyboard onChange={setText} 
-              onBackspace={handleBackspace}
-              onSpace={handleSpace}
-              onEnter={handleEnter}
-              />
-            )}
+                        <textarea
+                            className='form-control'
+                            style={{
+                                backgroundColor: props.mode === 'dark' ? '#13466e' : 'white',
+                                color: props.mode === 'dark' ? 'white' : '#042743',
+                                width: '45rem',
+                            }}
+                            id='myBox'
+                            rows='8'
+                            onChange={(event) => setText(event.target.value)}
+                            value={text}
+                        />
+                        {keyboardVisible && (
+                            <VirtualKeyboard onChange={setText}
+                                onBackspace={handleBackspace}
+                                onSpace={handleSpace}
+                                onEnter={handleEnter}
+                            />
+                        )}
                     </div>
                 </div>
                 <div className="d-flex justify-content-center">

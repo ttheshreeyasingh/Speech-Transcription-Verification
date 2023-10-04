@@ -48,6 +48,7 @@ textarea {
   background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
   border: none;
+  height: 240px;
   padding: 10px;
   opacity: 0.8;
 }
@@ -90,7 +91,7 @@ textarea {
 
 /* Navigation.css */
 .navigation {
-  flex: 0.7;
+  flex: 0.6;
   background-color: #f8f9fa;
   padding: 20px;
   overflow-y: auto;
@@ -111,7 +112,7 @@ textarea {
   justify-content: center;
   margin-bottom: 10px; 
   padding: 10px;
-  margin: 10px;
+  margin: 1px;
 }
 
 .search-bar input {
@@ -153,3 +154,52 @@ textarea {
   background: linear-gradient(to bottom, #042743, #0056b3);
   transform: scale(1.02);
 }
+
+/* for the chunks to be visible as discarded or saved in the navigation panel */
+/* .green-button {
+  background-color: rgb(43, 169, 43);
+}
+
+.green-button:hover {
+  background: linear-gradient(to bottom, #2a962c, #56eb42);
+  transform: scale(1.02);
+}
+
+.red-button {
+  background-color: rgb(177, 20, 20);
+}
+
+.red-button:hover {
+  background: linear-gradient(to bottom, #840404, #f00);
+  transform: scale(1.02);
+} */
+
+
+/* Transcript status */
+.transcript-counts {
+  position: fixed;
+  top: 200px; /* Adjust the top position as needed */
+  right: 20px; /* Adjust the right position as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.count-box {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc; /* Add a border to the count box */
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.count-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.count-value {
+  margin: 0;
+}
+

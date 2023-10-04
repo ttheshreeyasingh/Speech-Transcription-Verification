@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TextForm from './TextForm';
 
-const AudioPlayerWithTextForm = ({selectedChunk, transcriptNumber, setTranscriptNumber , text, setText, isAudio, setIsAudio, audioSrc, setAudioSrc}) => {
+const AudioPlayerWithTextForm = ({ selectedChunk, transcriptNumber, setTranscriptNumber, text, setText, isAudio, setIsAudio, audioSrc, setAudioSrc, setChunkColors }) => {
 
     useEffect(() => {
         setIsAudio(false);
@@ -26,6 +26,7 @@ const AudioPlayerWithTextForm = ({selectedChunk, transcriptNumber, setTranscript
                         setAudioSrc={setAudioSrc}
                         setIsAudio={setIsAudio}
                         selectedChunk={selectedChunk}
+                        setChunkColors={setChunkColors}
                     />
                 </div>
             </div>
