@@ -3,7 +3,16 @@ import 'react-simple-keyboard/build/css/index.css';
 import Keyboard from 'react-simple-keyboard';
 
 const VirtualKeyboard = ({ onChange, onBackspace, onSpace, onEnter }) => {
+  
   const onKeyPress = (button) => {
+    let textarea = document.activeElement; // Get the currently focused element
+  
+    if (!textarea || textarea.tagName !== "TEXTAREA") {
+      // If there is no currently focused textarea, find the nearest one
+      const textareas = document.getElementsByTagName("textarea");
+      textarea = textareas[0];
+    }
+  
     switch (button) {
       case "{bksp}":
         onBackspace();
@@ -15,10 +24,18 @@ const VirtualKeyboard = ({ onChange, onBackspace, onSpace, onEnter }) => {
         onEnter();
         break;
       default:
-        onChange(prevText => prevText + button);
+        const { selectionStart, selectionEnd } = textarea; // Get cursor position
+        const value = textarea.value;
+        const newValue = value.substring(0, selectionStart) + button + value.substring(selectionEnd);
+        textarea.value = newValue; // Update element value
+        textarea.selectionStart = textarea.selectionEnd = selectionStart + 1; // Move cursor forward
+        onChange(newValue);
         break;
     }
   };
+  
+  
+  
 
   return <Keyboard onKeyPress={onKeyPress} 
   layout={{
