@@ -3,6 +3,26 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Add this line for CORS support
 
+const multer = require('multer');
+
+const fs = require('fs');
+const path = require('path');
+
+// Define the save and discard directories
+const saveDir = path.join(__dirname, './main/save');
+const discardDir = path.join(__dirname, './main/discard');
+
+// Function to create a directory if it doesn't exist
+function createDirectoryIfNotExists(directory) {
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory);
+  }
+}
+
+// Set up Multer for handling file uploads
+const storage = multer.memoryStorage(); // Store audio as memory buffer
+const upload = multer({ storage: storage });
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -32,41 +52,69 @@ app.use(function (req, res, next) {
 //   runPythonScript('./main/transcription.py');
 // }, 5000); // Adjust the delay (in milliseconds) as needed to ensure the first script has finished
 
-// Save the text to a file
-const fs = require('fs');
-const path = require('path');
+// Create save and discard directories if they don't exist
+createDirectoryIfNotExists(saveDir);
+createDirectoryIfNotExists(discardDir);
 
 let savedTranscripts = [];
 let discardedTranscripts = [];
 
-app.post('/save-text', (req, res) => {
+// Save both text and audio
+app.post('/save-text-and-audio', upload.fields([{ name: 'text' }, { name: 'audio' }]), (req, res) => {
   const text = req.body.text;
   const transcriptNumber = req.body.transcriptNumber;
-  const filePath = path.join(__dirname, `./main/save/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
-  fs.writeFile(filePath, text, (err) => {
+  const audio = req.files.audio[0];
+
+  const textFilePath = path.join(__dirname, `./main/save/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+  const audioFilePath = path.join(__dirname, `./main/save/transcript${transcriptNumber.toString().padStart(4, '0')}.wav`);
+
+  fs.writeFile(textFilePath, text, (err) => {
     if (err) {
       console.log(err);
-      res.status(500).send('Error saving file');
+      res.status(500).send('Error saving text file');
     } else {
-      console.log('File saved successfully');
-      savedTranscripts.push(transcriptNumber); // Update the saved transcripts array
-      res.send('File saved successfully');
+      console.log('Text file saved successfully');
+      // Handle the audio file
+      fs.writeFile(audioFilePath, audio.buffer, (err) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Error saving audio file');
+        } else {
+          console.log('Audio file saved successfully');
+          savedTranscripts.push(transcriptNumber); // Update the saved transcripts array
+          res.send('Text and audio files saved successfully');
+        }
+      });
     }
   });
 });
 
-app.post('/discard-text', (req, res) => {
+// Discard both text and audio
+app.post('/discard-text-and-audio', upload.fields([{ name: 'text' }, { name: 'audio' }]), (req, res) => {
   const text = req.body.text;
   const transcriptNumber = req.body.transcriptNumber;
-  const filePath = path.join(__dirname, `./main/discard/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
-  fs.writeFile(filePath, text, (err) => {
+  const audio = req.files.audio[0];
+
+  const textFilePath = path.join(__dirname, `./main/discard/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+  const audioFilePath = path.join(__dirname, `./main/discard/transcript${transcriptNumber.toString().padStart(4, '0')}.wav`);
+
+  fs.writeFile(textFilePath, text, (err) => {
     if (err) {
       console.log(err);
-      res.status(500).send('Error saving file');
+      res.status(500).send('Error discarding text file');
     } else {
-      console.log('File discarded successfully');
-      discardedTranscripts.push(transcriptNumber); // Update the discarded transcripts array
-      res.send('File discarded successfully');
+      console.log('Text file discarded successfully');
+      // Handle the audio file
+      fs.writeFile(audioFilePath, audio.buffer, (err) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send('Error discarding audio file');
+        } else {
+          console.log('Audio file discarded successfully');
+          discardedTranscripts.push(transcriptNumber); // Update the discarded transcripts array
+          res.send('Text and audio files discarded successfully');
+        }
+      });
     }
   });
 });

@@ -43,63 +43,157 @@ export default function TextForm(props) {
         } else {
             fetchText();
         }
-    }, [transcriptNumber, props.isAudio]);
+    }, [transcriptNumber, props.isAudio, setAudioSrc, setIsAudio, setText]);
 
     // Save button
     const handleSave = () => {
-        axios
-            .post('http://localhost:5000/save-text', {
-                text: text,
-                transcriptNumber: transcriptNumber,
-            })
-            .then((response) => {
-                console.log(response.data);
-                // Set the chunk color to green upon successful save
-                props.setChunkColors((prevColors) => {
-                    const updatedColors = [...prevColors];
-                    updatedColors[transcriptNumber - 1] = 'green';
+        // Create a FormData object to send both text and audio
+        const formData = new FormData();
+        formData.append('text', text);
+        formData.append('transcriptNumber', transcriptNumber);
 
-                    // Store updatedChunkColors in localStorage
-                    localStorage.setItem('chunkColors', JSON.stringify(updatedColors));
+        // If there's an audio source, append it to the form data
+        if (audioSrc) {
+            fetch(audioSrc)
+                .then((response) => response.blob())
+                .then((audioBlob) => {
+                    formData.append('audio', audioBlob, 'audio.wav');
 
-                    return updatedColors;
+                    // Send the form data with both text and audio
+                    axios
+                        .post('http://localhost:5000/save-text-and-audio', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        })
+                        .then((response) => {
+                            console.log(response.data);
+                            // Set the chunk color to green upon successful save
+                            props.setChunkColors((prevColors) => {
+                                const updatedColors = [...prevColors];
+                                updatedColors[transcriptNumber - 1] = 'green';
+
+                                // Store updatedChunkColors in localStorage
+                                localStorage.setItem('chunkColors', JSON.stringify(updatedColors));
+
+                                return updatedColors;
+                            });
+
+                            // Call the onSave function to update the saved count
+                            props.onSave();
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
+        }
+        else {
+            // If there's no audio source, send only the text
+            axios
+                .post('http://localhost:5000/save-text', {
+                    text: text,
+                    transcriptNumber: transcriptNumber,
+                })
+                .then((response) => {
+                    console.log(response.data);
+                    // Set the chunk color to green upon successful save
+                    props.setChunkColors((prevColors) => {
+                        const updatedColors = [...prevColors];
+                        updatedColors[transcriptNumber - 1] = 'green';
 
-                // Call the onSave function to update the saved count
-                props.onSave();
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+                        // Store updatedChunkColors in localStorage
+                        localStorage.setItem('chunkColors', JSON.stringify(updatedColors));
+
+                        return updatedColors;
+                    });
+
+                    // Call the onSave function to update the saved count
+                    props.onSave();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     };
+
+
 
     // Discard button
     const handleDiscard = () => {
-        axios
-            .post('http://localhost:5000/discard-text', {
-                text: text,
-                transcriptNumber: transcriptNumber,
-            })
-            .then((response) => {
-                console.log(response.data);
-                // Set the chunk color to red upon successful discard
-                props.setChunkColors((prevColors) => {
-                    const updatedColors = [...prevColors];
-                    updatedColors[transcriptNumber - 1] = 'red';
+        // Create a FormData object to send both text and audio
+        const formData = new FormData();
+        formData.append('text', text);
+        formData.append('transcriptNumber', transcriptNumber);
 
-                    // Store updatedChunkColors in localStorage
-                    localStorage.setItem('chunkColors', JSON.stringify(updatedColors));
+        // If there's an audio source, append it to the form data
+        if (audioSrc) {
+            fetch(audioSrc)
+                .then((response) => response.blob())
+                .then((audioBlob) => {
+                    formData.append('audio', audioBlob, 'audio.wav');
 
-                    return updatedColors;
+                    // Send the form data with both text and audio
+                    axios
+                        .post('http://localhost:5000/discard-text-and-audio', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        })
+                        .then((response) => {
+                            console.log(response.data);
+                            // Set the chunk color to red upon successful discard
+                            props.setChunkColors((prevColors) => {
+                                const updatedColors = [...prevColors];
+                                updatedColors[transcriptNumber - 1] = 'red';
+
+                                // Store updatedChunkColors in localStorage
+                                localStorage.setItem('chunkColors', JSON.stringify(updatedColors));
+
+                                return updatedColors;
+                            });
+
+                            // Call the onDiscard function to update the discarded count
+                            props.onDiscard();
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
+        } else {
+            // If there's no audio source, send only the text
+            axios
+                .post('http://localhost:5000/discard-text', {
+                    text: text,
+                    transcriptNumber: transcriptNumber,
+                })
+                .then((response) => {
+                    console.log(response.data);
+                    // Set the chunk color to red upon successful discard
+                    props.setChunkColors((prevColors) => {
+                        const updatedColors = [...prevColors];
+                        updatedColors[transcriptNumber - 1] = 'red';
 
-                // Call the onDiscard function to update the discarded count
-                props.onDiscard();
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+                        // Store updatedChunkColors in localStorage
+                        localStorage.setItem('chunkColors', JSON.stringify(updatedColors));
+
+                        return updatedColors;
+                    });
+
+                    // Call the onDiscard function to update the discarded count
+                    props.onDiscard();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     };
+
 
 
     // Next button

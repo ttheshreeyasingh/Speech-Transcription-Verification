@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 import AudioPlayerWithTextForm from './components/AudioPlayerWithTextForm';
@@ -16,7 +16,8 @@ function App() {
   const [alert, setAlert] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
   const [selectedChunk, setSelectedChunk] = useState(null);
-  const [chunkColors, setChunkColors] = useState(Array(57).fill(''));
+  const [numberOfTranscripts, setNumberOfTranscripts] = useState(0); 
+  const [chunkColors, setChunkColors] = useState(Array(57).fill('')); // For changing the color of the chunk buttons
   // Using localStorage API to store the last transcript number and retrieve it when the application starts again
   const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
 
@@ -48,6 +49,22 @@ function App() {
       showAlert("Light mode has been enabled", "success");
     }
   };
+
+  // Fetch the number of transcripts in the database to display in navigation panel
+  useEffect(() => {
+
+    // Fetch the list of transcript files 
+    axios.get(`${process.env.PUBLIC_URL}/Original data/transcripts/`)
+      .then(response => {
+        // Filter and count the transcript files based on your naming convention
+        const transcriptFiles = response.data.filter(file => file.startsWith('transcript'));
+        setNumberOfTranscripts(transcriptFiles.length);
+      })
+      .catch(error => {
+        console.error('Error fetching transcript files', error);
+      });
+  }, []);
+  
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -130,7 +147,7 @@ function App() {
 
         {isLoggedIn && (
           <Navigation
-            numberOfChunks={57}
+            numberOfChunks={numberOfTranscripts}
             handleChunkSelect={handleChunkSelect}
             chunkColors={chunkColors}
             setChunkColors={setChunkColors} // Pass setChunkColors to Navigation
