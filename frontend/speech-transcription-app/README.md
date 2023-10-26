@@ -2,3 +2,6 @@
 1. mdb-react-ui-kit -  `npm install mdb-react-ui-kit` or `yarn add mdb-react-ui-kit`
 2. Bootstrap - `npm install bootstrap`
 3. Routing - `npm install react-router-dom`
+
+## For save/discard:
+1. multer - `npm install multer`
