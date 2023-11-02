@@ -7,6 +7,9 @@ import Login from './components/Login/Login';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import axios from 'axios';
+import emailjs from 'emailjs-com';
+
+
 
 function App() {
   const [text, setText] = useState('Loading...');
@@ -79,34 +82,35 @@ function App() {
     }
   };
 
-  // Function to handle download of login data
-  const handleDownloadLoginData = () => {
-    const loginData = localStorage.getItem('loginData'); // Retrieve the login data from local storage
+  const nodemailer = require('nodemailer');
+  require('dotenv').config();
 
+  const handleSendLoginDataEmail = () => {
+    const loginData = localStorage.getItem('loginData');
+    const emailPassword = process.env.EMAIL_PASSWORD;
+  
     if (loginData) {
-      // Create a Blob with the login data as text
-      const blob = new Blob([JSON.stringify(JSON.parse(loginData), null, 2)], { type: 'text/plain' });
-
-      // Create a URL for the Blob
-      const url = window.URL.createObjectURL(blob);
-
-      // Create a download link
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'login_data.txt'; // Set the filename for the downloaded text file
-      a.style.display = 'none';
-
-      // Append the download link to the document and trigger the download
-      document.body.appendChild(a);
-      a.click();
-
-      // Clean up by revoking the Blob URL
-      window.URL.revokeObjectURL(url);
+      const templateParams = {
+        from_name: 'Your Name',
+        to_email: 'vankasrujana@gmail.com', // Replace with recipient's email address
+        message: 'Attached is the login_data.txt file.',
+        attachment: {
+          name: 'login_data.txt',
+          data: JSON.stringify(JSON.parse(loginData), null, 2)
+        }
+      };
+  
+      emailjs.send('service_wfvldle', 'template_7j3t54v', templateParams, 'T2YzQ7CVLXV_pylAB')
+        .then(function (response) {
+          alert('Mail has been sent successfully');
+        }, function (error) {
+          console.error('Error sending email:', error);
+        });
     } else {
       alert('No login data found.');
     }
   };
-
+  
   const handleChunkSelect = async (chunkNumber) => {
     console.log(`chunk number: ${chunkNumber}`);
     setSelectedChunk(chunkNumber);
@@ -140,8 +144,8 @@ function App() {
         )}
 
         {isLoggedIn && (
-          <div className="download-button" onClick={handleDownloadLoginData}>
-            Download Login Data
+          <div className="download-button" onClick={handleSendLoginDataEmail}>
+            Email Login Data
           </div>
         )}
 

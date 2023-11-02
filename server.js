@@ -129,6 +129,31 @@ app.get('/get-discarded-transcripts', (req, res) => {
   res.json({ discardedTranscripts });
 });
 
+// app.post('/move-folder', upload.fields([
+//   { name: 'transcriptsFolder', maxCount: 1 },
+//   { name: 'chunksFolder', maxCount: 1 }
+// ]), (req, res) => {
+//   const transcriptsFolder = req.files['transcriptsFolder'][0];
+//   const chunksFolder = req.files['chunksFolder'][0];
+//   const destinationPath = req.body.destinationPath;
+
+//   const transcriptsFolderPath = transcriptsFolder.path;
+//   const chunksFolderPath = chunksFolder.path;
+
+//   const transcriptsDestinationPath = path.join(destinationPath, transcriptsFolder.originalname);
+//   const chunksDestinationPath = path.join(destinationPath, chunksFolder.originalname);
+
+//   fs.copyFileSync(transcriptsFolderPath, transcriptsDestinationPath);
+//   fs.copyFileSync(chunksFolderPath, chunksDestinationPath);
+
+//   // Optionally, you can delete the source folders after duplication/moving
+//   fs.unlinkSync(transcriptsFolderPath);
+//   fs.unlinkSync(chunksFolderPath);
+
+//   res.json({ message: 'Folders moved/duplicated successfully' });
+// });
+
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
