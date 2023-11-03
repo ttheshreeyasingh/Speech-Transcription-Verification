@@ -7,9 +7,6 @@ import Login from './components/Login/Login';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import axios from 'axios';
-import emailjs from 'emailjs-com';
-
-
 
 function App() {
   const [text, setText] = useState('Loading...');
@@ -82,29 +79,24 @@ function App() {
     }
   };
 
-  const nodemailer = require('nodemailer');
-  require('dotenv').config();
-
   const handleSendLoginDataEmail = () => {
-    const loginData = localStorage.getItem('loginData');
-    const emailPassword = process.env.EMAIL_PASSWORD;
-  
+    const loginData = localStorage.getItem('loginData'); // Retrieve the login data from local storage
+    
     if (loginData) {
-      const templateParams = {
-        from_name: 'Your Name',
-        to_email: 'vankasrujana@gmail.com', // Replace with recipient's email address
-        message: 'Attached is the login_data.txt file.',
-        attachment: {
-          name: 'login_data.txt',
-          data: JSON.stringify(JSON.parse(loginData), null, 2)
-        }
-      };
-  
-      emailjs.send('service_wfvldle', 'template_7j3t54v', templateParams, 'T2YzQ7CVLXV_pylAB')
-        .then(function (response) {
-          alert('Mail has been sent successfully');
-        }, function (error) {
-          console.error('Error sending email:', error);
+      // Now, make a request to your server to send the email
+      fetch('http://localhost:5000/send-login-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ loginData }), // Send the login data to the server
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data); // Log the response from the server
+        })
+        .catch((error) => {
+          console.error('Error sending login data:', error);
         });
     } else {
       alert('No login data found.');

