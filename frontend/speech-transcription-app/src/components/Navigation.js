@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import '../App.css';
 
 const Navigation = ({ numberOfChunks, handleChunkSelect, chunkColors, setChunkColors }) => {
@@ -61,17 +61,20 @@ const Navigation = ({ numberOfChunks, handleChunkSelect, chunkColors, setChunkCo
       />
 
       <div className="transcript-counts">
-        <div className="count-box">
-          <p className="count-label">Saved Transcripts:</p>
-          <p className="count-value">{savedCount}</p>
-        </div>
-        <div className="count-box">
-          <p className="count-label">Discarded Transcripts:</p>
-          <p className="count-value">{discardedCount}</p>
-        </div>
-        <div className="count-box">
-          <p className="count-label">Remaining Transcripts:</p>
-          <p className="count-value">{remainingCount}</p>
+        <h2 className="count-title">Transcripts Count</h2>
+        <div className="count-table">
+          <div className="count-row">
+            <div className="count-label">Saved:</div>
+            <div className="count-value">{savedCount}</div>
+          </div>
+          <div className="count-row">
+            <div className="count-label">Discarded:</div>
+            <div className="count-value">{discardedCount}</div>
+          </div>
+          <div className="count-row">
+            <div className="count-label">Remaining:</div>
+            <div className="count-value">{remainingCount}</div>
+          </div>
         </div>
       </div>
 
