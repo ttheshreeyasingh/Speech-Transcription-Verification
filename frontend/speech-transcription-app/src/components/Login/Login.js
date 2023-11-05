@@ -34,35 +34,6 @@ function Login({ onLogin }) {
     return emailRegex.test(email);
   };
 
-//   const moveFolder = () => {
-//     // Get the selected folders and destination path
-//     const transcriptsFolder = document.getElementById('transcriptsFolder').files[0];
-//     const chunksFolder = document.getElementById('chunksFolder').files[0];
-//     const destinationPath = '../../../public/Original data/'
-
-//     // Create a FormData object to send data to the backend
-//     const formData = new FormData();
-//     formData.append('transcriptsFolder', transcriptsFolder);
-//     formData.append('chunksFolder', chunksFolder);
-//     formData.append('destinationPath', destinationPath);
-
-//     // Send the data to the backend using an HTTP request (e.g., AJAX or Fetch API)
-//     fetch('http://localhost:5000/move-folder', {
-//         method: 'POST',
-//         body: formData
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         console.log('Folders moved/duplicated successfully:', data);
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//     });
-// }
-
-
-
-
   const handleLogin = async () => {
     if (name && selectedLanguage && selectedFile) {
       if (isEmailValid(email)) {
