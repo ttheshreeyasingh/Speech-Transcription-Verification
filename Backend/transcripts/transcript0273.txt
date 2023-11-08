@@ -1,0 +1,1 @@
+working in a fault tolerant way what do i mean by fault tolerant way suppose if  i am providing information which is less than 

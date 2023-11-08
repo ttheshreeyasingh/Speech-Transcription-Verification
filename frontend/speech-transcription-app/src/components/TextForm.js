@@ -11,7 +11,11 @@ export default function TextForm(props) {
     const setIsAudio = props.setIsAudio;
     const transcriptNumber = props.transcriptNumber;
     const setTranscriptNumber = props.setTranscriptNumber;
-    const [keyboardVisible, setKeyboardVisible] = useState(false);
+    const selectedLanguage = props.selectedLanguage;
+
+    // Use selectedLanguage to conditionally set the visibility of the keyboard
+    const [keyboardVisible, setKeyboardVisible] = useState(selectedLanguage === 'telugu');
+
 
     useEffect(() => {
         const fetchText = async () => {
@@ -211,7 +215,9 @@ export default function TextForm(props) {
     };
 
     const handleTextareaClick = () => {
-        setKeyboardVisible(true);
+        if (selectedLanguage === 'telugu') {
+            setKeyboardVisible(true);
+        }
     };
 
     const handleBackspace = () => {

@@ -6,7 +6,7 @@ function Login({ onLogin }) {
   const [audioFiles, setAudioFiles] = useState(['final.wav']);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState('telugu');
-  const languages = ['telugu'];
+  const languages = ['telugu', 'english'];
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');

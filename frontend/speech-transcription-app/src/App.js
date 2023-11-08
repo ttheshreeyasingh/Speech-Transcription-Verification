@@ -16,7 +16,7 @@ function App() {
   const [alert, setAlert] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
   const [selectedChunk, setSelectedChunk] = useState(null);
-  const [numberOfTranscripts, setNumberOfTranscripts] = useState(0); 
+  const [numberOfTranscripts, setNumberOfTranscripts] = useState(0);
   const [chunkColors, setChunkColors] = useState(Array(57).fill('')); // For changing the color of the chunk buttons
   // Using localStorage API to store the last transcript number and retrieve it when the application starts again
   const [transcriptNumber, setTranscriptNumber] = useState(parseInt(localStorage.getItem('transcriptNumber')) || 1);
@@ -64,9 +64,9 @@ function App() {
         console.error('Error fetching transcript files', error);
       });
   }, []);
-  
 
-  const handleLogin = () => {
+
+  const handleLogin = (selectedLanguage) => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true'); // Set login state in localStorage
   };
@@ -81,7 +81,7 @@ function App() {
 
   const handleSendLoginDataEmail = () => {
     const loginData = localStorage.getItem('loginData'); // Retrieve the login data from local storage
-    
+
     if (loginData) {
       // Now, make a request to your server to send the email
       fetch('http://localhost:5000/send-login-data', {
@@ -102,7 +102,7 @@ function App() {
       alert('No login data found.');
     }
   };
-  
+
   const handleChunkSelect = async (chunkNumber) => {
     console.log(`chunk number: ${chunkNumber}`);
     setSelectedChunk(chunkNumber);
@@ -167,6 +167,7 @@ function App() {
                   setAudioSrc={setAudioSrc}
                   setIsAudio={setIsAudio}
                   setChunkColors={setChunkColors}
+                  selectedLanguage={loginData.selectedLanguage}
                 />
               </Switch>
             ) : (

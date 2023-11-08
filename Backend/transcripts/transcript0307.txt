@@ -1,0 +1,1 @@
+something which is hard to program because of the very architecture of the computer itself 

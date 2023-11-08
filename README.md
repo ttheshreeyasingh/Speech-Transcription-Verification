@@ -42,8 +42,8 @@ If you want to run the application locally without Docker for development purpos
 - Then run `npm start` to run the app in the development mode.
 - Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
   
-## Interface - // add updated image 
-![alt text](https://github.com/ttheshreeyasingh/Speech-Transcription-Verification/blob/main/frontend/speech-transcription-app/public/preview.png)
+## Interface 
+![alt text](https://github.com/ttheshreeyasingh/Speech-Transcription-Verification/blob/main/frontend/speech-transcription-app/public/interface.png)
 
 
 ## Tech Stack
